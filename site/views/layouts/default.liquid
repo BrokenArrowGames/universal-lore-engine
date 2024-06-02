@@ -1,0 +1,9 @@
+---
+layout: root
+---
+{% block _layout %}
+{% render "partials/header.liquid" %}
+<main style="width: 600px; max-width: 80%; margin: 3rem auto">
+  {% block content %}My default content{% endblock %}
+</main>
+{% endblock %}
