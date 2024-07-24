@@ -10,9 +10,9 @@ on:
         required: true
         default: '20'
   push:
-    branches: [ "main" ]
+    branches: [ "main", "dev" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "dev" ]
 
 env:
   GIT_BRANCH: ${{ inputs.git-branch || github.ref }}
