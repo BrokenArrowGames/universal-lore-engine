@@ -23,6 +23,7 @@
       "@err/*": ["src/error/*"],
       "@mod/*": ["src/module/*"],
       "@util/*": ["src/util/*"],
+      "@test/*": ["test/*"],
     }
   },
   "include": ["src/", "test/"]
