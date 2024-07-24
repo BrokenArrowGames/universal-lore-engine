@@ -1,0 +1,50 @@
+# https://github.com/pnpm/action-setup
+name: CI - Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      git-branch:
+        required: false
+      node-version:
+        required: true
+        default: '20'
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  GIT_BRANCH: ${{ inputs.git-branch || github.ref }}
+  PNPM_VERSION: ${{ inputs.pnpm-version || '8' }}
+  NODE_VERSION: ${{ inputs.node-version || '20' }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.GIT_BRANCH }}
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --strict-peer-dependencies
+      - name: Build
+        run: pnpm build
+      - name: Unit Test
+        run: pnpm test
+      - name: E2E Test
+        run: pnpm test:e2e

@@ -1,0 +1,24 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "build",
+			"group": {
+				"isDefault": true,
+				"kind": "build"
+			},
+			"problemMatcher": ["$tsc", "$eslint-compact"],
+			"presentation": {
+				"echo": true,
+				"reveal": "silent",
+				"focus": false,
+				"panel": "dedicated",
+				"showReuseMessage": false,
+				"clear": true
+			},
+			"label": "npm: build",
+			"detail": "nest build",
+		}
+	]
+}
