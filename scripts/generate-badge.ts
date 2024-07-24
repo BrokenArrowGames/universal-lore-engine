@@ -4,7 +4,7 @@ const appVer = GetAppVersion();
 GenBadge("version", appVer);
 
 const { pct: covPct, color: covColor } = GetCoverageInfo();
-GenBadge("coverage", covPct, { color: covColor });
+GenBadge("coverage", covPct+"%", { color: covColor });
 
 
 
