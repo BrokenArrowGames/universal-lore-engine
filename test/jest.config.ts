@@ -14,10 +14,11 @@ const config: Config = {
     '@err/(.*)': ['<rootDir>/src/error/$1'],
     '@mod/(.*)': ['<rootDir>/src/module/$1'],
     '@util/(.*)': ['<rootDir>/src/util/$1'],
+    '@test/(.*)': ['<rootDir>/test/$1'],
   },
   coveragePathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/node_modules/'],
   collectCoverageFrom: ['./src/**/*.(t|j)s'],
-  coverageReporters: ['json-summary'],
+  coverageReporters: ['json-summary', 'text'],
   coverageDirectory: './coverage',
 };
 

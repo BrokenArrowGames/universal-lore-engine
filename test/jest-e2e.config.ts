@@ -14,6 +14,7 @@ const config: Config = {
     '@err/(.*)': ['<rootDir>/src/error/$1'],
     '@mod/(.*)': ['<rootDir>/src/module/$1'],
     '@util/(.*)': ['<rootDir>/src/util/$1'],
+    '@test/(.*)': ['<rootDir>/test/$1'],
   },
 };
 
