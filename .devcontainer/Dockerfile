@@ -5,6 +5,7 @@ ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
 RUN apt-get update && apt-get install -y \
+    vim \
     procps \
     git \
     unzip \
