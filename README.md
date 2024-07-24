@@ -5,7 +5,6 @@
 # Universal Lore Engine
 ![version badge](resources/badge-version.svg)
 ![coverage badge](resources/badge-coverage.svg)
-[![CI - Build](https://github.com/BrokenArrowGames/universal-lore-engine/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/BrokenArrowGames/universal-lore-engine/actions/workflows/build.yml)
 [![CI - Build](https://github.com/BrokenArrowGames/universal-lore-engine/actions/workflows/build.yml/badge.svg?branch=dev)](https://github.com/BrokenArrowGames/universal-lore-engine/actions/workflows/build.yml)
 
 A tool for worldbuilding with a focus on writing book, video game, and TTRPG stories.
