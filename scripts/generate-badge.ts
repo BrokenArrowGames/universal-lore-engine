@@ -1,10 +1,10 @@
 import { readFileSync, writeFileSync } from "fs";
 
 const appVer = GetAppVersion();
-GenBadge("version", appVer);
+GenBadge("version", `v${appVer}`);
 
 const { pct: covPct, color: covColor } = GetCoverageInfo();
-GenBadge("coverage", covPct+"%25", { color: covColor });
+GenBadge("coverage", `${covPct}%25`, { color: covColor });
 
 
 
