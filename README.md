@@ -5,8 +5,8 @@
 # Universal Lore Engine
 ![version badge](resources/badge-version.svg)
 ![coverage badge](resources/badge-coverage.svg)
-<!-- ![build badge](https://github.com/github/docs/actions/workflows/main.yml/badge.svg?branch=main)
-![build badge](https://github.com/github/docs/actions/workflows/main.yml/badge.svg?branch=dev) -->  
+![build badge](https://github.com/github/docs/actions/workflows/build.yml/badge.svg?branch=main)
+![build badge](https://github.com/github/docs/actions/workflows/build.yml/badge.svg?branch=dev)  
 
 A tool for worldbuilding with a focus on writing book, video game, and TTRPG stories.
 
