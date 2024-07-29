@@ -51,7 +51,10 @@ export class UserController {
   }
 
   @Delete(':id')
-  public deleteUser(@Param() params: { id: number }): Promise<void> {
-    return this.userService.deleteUser(params.id);
+  public deleteUser(
+    @Req() req: AppRequest,
+    @Param() params: { id: number }
+  ): Promise<void> {
+    return this.userService.deleteUser(req.user, params.id);
   }
 }

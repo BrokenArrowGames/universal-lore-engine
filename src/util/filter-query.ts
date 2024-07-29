@@ -10,9 +10,13 @@ export interface FilterRange {
 }
 
 export function filterProps<T, K extends keyof T>(
-  query: FilterQuery<T, K>,
+  query?: FilterQuery<T, K>,
   limit: FilterRange = { min: 0, max: 100, def: 10 },
 ) {
+  if (!query) {
+    return { skip: 0, take: limit.def }
+  }
+
   query.limit = Math.min(
     Math.max(limit.min, query.limit ?? limit.def),
     limit.max,
