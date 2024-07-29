@@ -16,7 +16,12 @@ const config: Config = {
     '@util/(.*)': ['<rootDir>/src/util/$1'],
     '@test/(.*)': ['<rootDir>/test/$1'],
   },
-  coveragePathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/node_modules/'],
+  coveragePathIgnorePatterns: [
+    '<rootDir>/dist/',
+    '<rootDir>/node_modules/',
+    '<rootDir>/src/database/migration',
+    '<rootDir>/src/database/seed',
+  ],
   collectCoverageFrom: ['./src/**/*.(t|j)s'],
   coverageReporters: ['json-summary', 'text'],
   coverageDirectory: './coverage',

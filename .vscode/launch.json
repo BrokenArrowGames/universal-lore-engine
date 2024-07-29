@@ -10,11 +10,6 @@
             "request": "launch",
             "type": "node-terminal"
         }, {
-            "name": "Debug Test",
-            "command": "pnpm test -- --runInBand",
-            "request": "launch",
-            "type": "node-terminal"
-        }, {
             "name": "Attach by Process ID",
             "processId": "${command:PickProcess}",
             "request": "attach",
