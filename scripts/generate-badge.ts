@@ -20,7 +20,7 @@ async function GenBadge(left: string, right: string, opts?: BadgeOpts) {
 
 function GetColor(pct: number) {
   if (pct > 80) return 'green';
-  if (pct > 65) return 'yellow';
+  if (pct > 50) return 'yellow';
   return 'red';
 }
 
