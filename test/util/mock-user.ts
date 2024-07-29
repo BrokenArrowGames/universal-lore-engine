@@ -1,5 +1,31 @@
 import { UserEntity } from "@db/entity/user.entity";
 import { RandomDateInRange, RandomIntInRange, RandomName } from "./random";
+import { DataSource, EntityManager, Repository } from "typeorm";
+
+export function MockDbRepo<T>(): jest.MaybeMockedDeep<Repository<T>> {
+  const manager = {
+    findOneByOrFail: jest.fn(),
+    save: jest.fn(),
+    remove: jest.fn(),
+    transaction: jest.fn(),
+    update: jest.fn(),
+  };
+
+  manager.transaction.mockImplementation(async (fn) => await fn(manager));
+
+  return {
+    find: jest.fn(),
+    findOneOrFail: jest.fn(),
+    findOneByOrFail: jest.fn(),
+    save: jest.fn(),
+    create: jest.fn(),
+    manager: manager as unknown as EntityManager
+  } as jest.MaybeMockedDeep<Repository<T>>;
+};
+
+export function MockDataSourceFactory(): DataSource {
+  return {} as DataSource;
+};
 
 export function RandomMockUser(opt?: {
   firstName?: string,

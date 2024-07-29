@@ -21,6 +21,7 @@ import { UserEntity } from '@db/entity/user.entity';
 import { AuthUser } from '../auth/auth.dto';
 import { AuthService } from '../auth/auth.service';
 import { EntityValidationError } from '@db/entity/util/entity-validation-error';
+import { ValidationError } from 'class-validator';
 
 export type UserFilter = FilterQuery<UserDto, 'name'>;
 
@@ -32,11 +33,11 @@ export class UserService {
     private readonly authService: AuthService,
   ) {}
 
-  public async getFilteredUsers(filterQuery: UserFilter): Promise<UserDto[]> {
+  public async getFilteredUsers(filterQuery?: UserFilter): Promise<UserDto[]> {
     const entities = await this.userRepo.find({
       select: { id: true, name: true },
       where: {
-        name: filterQuery.name ? Like(`%${filterQuery.name}%`) : null,
+        name: filterQuery?.name ? Like(`%${filterQuery?.name}%`) : null,
       },
       ...filterProps(filterQuery),
     });
@@ -140,7 +141,10 @@ export class UserService {
     return UserDtoFromEntity(result);
   }
 
-  public async deleteUser(userId: number): Promise<void> {
+  public async deleteUser(
+    _currentUser: AuthUser,
+    userId: number
+  ): Promise<void> {
     try {
       await this.userRepo.manager.transaction(async (manager) => {
         const userEntity = await manager.findOneByOrFail(UserEntity, {
