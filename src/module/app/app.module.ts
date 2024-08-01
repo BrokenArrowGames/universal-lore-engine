@@ -8,6 +8,7 @@ import { CorrelationMiddleware } from '@mod/logger/correlation.middleware';
 import { AuthModule } from '@mod/auth/auth.module';
 import { UserEntity } from '@db/entity/user.entity';
 import { Config, INFER, LoadConfig } from '@util/config';
+import { BootstrapModule } from '@/bootstrap/bootstrap.module';
 
 @Module({
   imports: [
@@ -27,12 +28,13 @@ import { Config, INFER, LoadConfig } from '@util/config';
         password: config.getOrThrow('database.password', INFER),
         database: config.getOrThrow('database.name', INFER),
         schema: config.getOrThrow('database.schema', INFER),
-        entities: ['dist/database/entity/*.entity.js'],
+        autoLoadEntities: true,
         // synchronize: true,
         // logging: true
       }),
     }),
     TypeOrmModule.forFeature([UserEntity]),
+    BootstrapModule,
     AuthModule,
     UserModule,
     SubjectModule,

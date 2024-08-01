@@ -18,20 +18,20 @@ export class SubjectDto {
   tags?: SubjectTagDto[];
   short_description?: string;
   long_description?: string;
-  created_by?: UserDto;
-  created_at?: Date;
-  modified_by?: UserDto;
-  modified_at?: Date;
+  createdBy?: UserDto;
+  createdAt?: Date;
+  modifiedBy?: UserDto;
+  modifiedAt?: Date;
 }
 
 export type CreateSubjectRequest = Omit<
   UserDto,
   | 'id'
   | 'long_description'
-  | 'created_by'
-  | 'created_at'
-  | 'modified_by'
-  | 'modified_at'
+  | 'createdBy'
+  | 'createdAt'
+  | 'modifiedBy'
+  | 'modifiedAt'
 > &
   Required<Pick<SubjectDto, 'long_description'>>;
 
@@ -46,14 +46,14 @@ export function SubjectDtoFromEntity(entity: SubjectEntity): SubjectDto {
     tags: entity.tags?.map(SubjectTagDtoFromEntity),
     short_description: entity.short_description,
     long_description: entity.long_description,
-    created_by: entity.created_by
-      ? UserDtoFromEntity(entity.created_by)
+    createdBy: entity.createdBy
+      ? UserDtoFromEntity(entity.createdBy)
       : undefined,
-    created_at: entity.created_at,
-    modified_by: entity.created_by
-      ? UserDtoFromEntity(entity.modified_by)
+    createdAt: entity.createdAt,
+    modifiedBy: entity.createdBy
+      ? UserDtoFromEntity(entity.modifiedBy)
       : undefined,
-    modified_at: entity.modified_at,
+    modifiedAt: entity.modifiedAt,
   };
 }
 
@@ -67,9 +67,9 @@ export function SubjectEntityFromDto(
     tags: dto.tags.map(SubjectTagEntityFromDto),
     short_description: dto.short_description,
     long_description: dto.long_description,
-    modified_by: dto.modified_by
-      ? UserEntityFromDto(dto.modified_by)
+    modifiedBy: dto.modifiedBy
+      ? UserEntityFromDto(dto.modifiedBy)
       : undefined,
-    modified_at: dto.modified_at,
+    modifiedAt: dto.modifiedAt,
   };
 }

@@ -1,10 +1,25 @@
 import { ConfigGetOptions } from '@nestjs/config';
+import { Level } from 'pino';
 
 export type Config = {
+  user: {
+    root: {
+      name: string;
+      password: string;
+      email: string;
+    },
+    test: {
+      name: string;
+      password: string;
+      email: string;
+    }
+  }
   app: {
     local: boolean;
     env: 'local' | 'dev' | 'prod';
     port: number;
+    log: Level;
+    sysUser: string;
   };
   database: {
     host: string;
@@ -28,6 +43,9 @@ export type Config = {
       maxage: number;
     };
   };
+  constants: {
+    redacted: string;
+  };
 };
 
 export const LoadConfig = (): Config => ({
@@ -35,6 +53,20 @@ export const LoadConfig = (): Config => ({
     local: process.env.APP_ENV === 'local',
     env: process.env.APP_ENV as 'local' | 'dev' | 'prod',
     port: +(process.env.APP_PORT ?? 3000),
+    log: process.env.APP_LOG_LEVEL as Level ?? 'info',
+    sysUser: "system",
+  },
+  user: {
+    root: {
+      name: process.env.ROOT_USER_NAME ?? "sys_admin",
+      password: process.env.ROOT_USER_PASS,
+      email: process.env.ROOT_USER_MAIL
+    },
+    test: {
+      name: process.env.TEST_USER_NAME ?? "sys_tst_user",
+      password: process.env.TEST_USER_PASS,
+      email: process.env.TEST_USER_MAIL,
+    }
   },
   database: {
     host: process.env.DB_APP_HOST,
@@ -57,6 +89,9 @@ export const LoadConfig = (): Config => ({
       maxage: +(process.env.AUTH_SESSION_MAXAGE ?? 6 * 60 * 60 * 1000), // default to 6 hours
     },
   },
+  constants: {
+    redacted: "[REDACTED]",
+  }
 });
 
 export const INFER: ConfigGetOptions = { infer: true };

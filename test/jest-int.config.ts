@@ -5,10 +5,11 @@ const config: Config = {
   moduleFileExtensions: ['js', 'json', 'ts'],
   rootDir: '..',
   testEnvironment: 'node',
-  testMatch: ['<rootDir>/test/**/*.spec.ts'],
+  testMatch: ['<rootDir>/test/**/*.int-spec.ts'],
   transform: {
     '^.+\\.(t|j)s$': 'ts-jest',
   },
+  // setupFiles: ['dotenv/config'],
   moduleNameMapper: {
     '@/(.*)': ['<rootDir>/src/$1'],
     '@db/(.*)': ['<rootDir>/src/database/$1'],
@@ -17,15 +18,6 @@ const config: Config = {
     '@util/(.*)': ['<rootDir>/src/util/$1'],
     '@test/(.*)': ['<rootDir>/test/$1'],
   },
-  coveragePathIgnorePatterns: [
-    '<rootDir>/dist/',
-    '<rootDir>/node_modules/',
-    '<rootDir>/src/database/migration',
-    '<rootDir>/src/database/seed',
-  ],
-  collectCoverageFrom: ['./src/**/*.(t|j)s'],
-  coverageReporters: ['json-summary', 'text'],
-  coverageDirectory: './coverage',
 };
 
 export default config;

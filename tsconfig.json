@@ -19,6 +19,7 @@
     "noFallthroughCasesInSwitch": false,
     // "preserveSymlinks": true,
     "paths": {
+      "@/*": ["src/*"],
       "@db/*": ["src/database/*"],
       "@err/*": ["src/error/*"],
       "@mod/*": ["src/module/*"],
@@ -26,5 +27,10 @@
       "@test/*": ["test/*"],
     }
   },
-  "include": ["src/", "test/"]
+  "include": ["src/", "test/"],
+  "ts-node": {
+    "require": [
+      "tsconfig-paths/register"
+    ]
+  },
 }

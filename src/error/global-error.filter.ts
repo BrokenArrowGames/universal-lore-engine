@@ -4,20 +4,22 @@ import {
   ArgumentsHost,
   HttpException,
 } from '@nestjs/common';
-import { ErrorResponse } from '@util/app-request';
+import { AppRequest, AppResponse, ErrorResponse } from '@util/app-request';
 import { AppLogger } from '@mod/logger/logger.service';
 import { AppError } from './app-error';
+import { ForbiddenError } from '@casl/ability';
+import { Request, Response } from 'express';
 
 @Catch(Error)
 export class GlobalErrorFilter implements ExceptionFilter {
   constructor(private readonly logger: AppLogger) {
-    this.logger.setContext('EntityValidationErrorFilter');
+    this.logger.setContext('GlobalErrorFilter');
   }
 
   public catch(exception: Error, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
-    const req = ctx.getRequest<any>();
-    const res = ctx.getResponse<any>();
+    const req = ctx.getRequest<AppRequest>();
+    const res = ctx.getResponse<Response>();
 
     const errRes: ErrorResponse = {
       status: 500,
@@ -37,14 +39,21 @@ export class GlobalErrorFilter implements ExceptionFilter {
       errRes.type = exception.name;
       errRes.message = exception.message;
       cause = exception.cause?.toString();
+    } else if (exception instanceof ForbiddenError) {
+      errRes.status = 403;
+      errRes.type = ForbiddenError.name;
+      errRes.message = exception.message;
+      cause = exception.cause?.toString();
     } else {
       cause = exception.toString();
     }
 
     this.logger.error({
+      method: req.method,
+      url: req.originalUrl,
       ...errRes,
       correlationId: req.correlationId,
-      cause,
+      cause
     });
     this.logger.debug({
       error: exception,

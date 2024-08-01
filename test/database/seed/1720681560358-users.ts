@@ -1,7 +1,10 @@
 import { In, MigrationInterface, QueryRunner } from 'typeorm';
 import { UserEntity } from '../../../src/database/entity/user.entity';
+import { Config, LoadConfig } from '@util/config';
+import { RoleName } from '@/module/auth/role/types';
 
 export class Users1720681560358 implements MigrationInterface {
+  private config: Config = LoadConfig();
   private users: string[] = [
     'tst_admin',
     'tst_user1',
@@ -15,22 +18,22 @@ export class Users1720681560358 implements MigrationInterface {
   ];
 
   public async up(queryRunner: QueryRunner): Promise<void> {
-    const repo = queryRunner.manager.getRepository(UserEntity);
-    const { id: defaultUser } = await repo.findOneByOrFail({ name: 'system' });
+    const SYS_USER = this.config.app.sysUser;
+    const { id: sysUser } = await queryRunner.manager.findOneByOrFail(UserEntity, { name: SYS_USER });
 
     const users = this.users.map((name) =>
-      repo.create({
+      queryRunner.manager.create(UserEntity, {
         name,
+        role: name.includes("admin") ? RoleName.ADMIN : RoleName.USER,
         email: `${name}@localhost`,
-        created_by: { id: defaultUser },
-        modified_by: { id: defaultUser },
+        createdBy: { id: sysUser },
+        modifiedBy: { id: sysUser },
       }),
     );
-    await repo.insert(users);
+    await queryRunner.manager.insert(UserEntity, users);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    const repo = queryRunner.manager.getRepository(UserEntity);
-    repo.delete({ name: In(this.users) });
+    queryRunner.manager.delete(UserEntity, { name: In(this.users) });
   }
 }

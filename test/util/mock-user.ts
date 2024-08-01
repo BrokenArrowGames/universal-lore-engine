@@ -46,12 +46,12 @@ export function RandomMockUser(opt?: {
     id: RandomIntInRange(2, 9999),
     email: `${firstName}.${lastName}@example.com`,
     name: `TEST_${firstName}_${lastName}`,
-    created_by_id: creatorId,
-    created_by: { id: creatorId } as UserEntity,
-    created_at: createDate,
-    modified_by_id: modifierId,
-    modified_by: { id: modifierId } as UserEntity,
-    modified_at: modifyDate,
+    createdById: creatorId,
+    createdBy: { id: creatorId } as UserEntity,
+    createdAt: createDate,
+    modifiedById: modifierId,
+    modifiedBy: { id: modifierId } as UserEntity,
+    modifiedAt: modifyDate,
   } as UserEntity;
 }
 
@@ -60,11 +60,11 @@ export const mockUsers: { [key:string]: UserEntity } = {
     id: 1,
     email: "test@example.com",
     name: "name",
-    created_by_id: 1,
-    created_by: { id: 1 } as UserEntity,
-    created_at: new Date(),
-    modified_by_id: 1,
-    modified_by: { id: 1 } as UserEntity,
-    modified_at: new Date(),
+    createdById: 1,
+    createdBy: { id: 1 } as UserEntity,
+    createdAt: new Date(),
+    modifiedById: 1,
+    modifiedBy: { id: 1 } as UserEntity,
+    modifiedAt: new Date(),
   } as UserEntity
 };

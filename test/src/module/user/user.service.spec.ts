@@ -37,21 +37,21 @@ describe('UserService', () => {
     it('should return empty array when no users are found', () => {
       userRepo.find.mockResolvedValue([]);
   
-      return expect(service.getFilteredUsers())
+      return expect(service.getFilteredUserList({} as AuthUser))
         .resolves.toStrictEqual([]);
     });
     
     it('should allow null filter properties', () => {
       userRepo.find.mockResolvedValue([]);
   
-      return expect(service.getFilteredUsers({ name: null, limit: null, page: null }))
+      return expect(service.getFilteredUserList({} as AuthUser, { name: null, limit: null, page: null }))
         .resolves.toStrictEqual([]);
     });
     
     it('should allow filter by name', () => {
       userRepo.find.mockResolvedValue([]);
   
-      return expect(service.getFilteredUsers({ name: "test" }))
+      return expect(service.getFilteredUserList({} as AuthUser, { name: "test" }))
         .resolves.toStrictEqual([]);
     });
 
@@ -69,14 +69,14 @@ describe('UserService', () => {
 
       userRepo.find.mockResolvedValue(users);
   
-      return expect(service.getFilteredUsers())
+      return expect(service.getFilteredUserList({} as AuthUser))
         .resolves.toStrictEqual(expected);
     });
     
     it('should rethrow when unhandled exception occurs', () => {
       userRepo.find.mockRejectedValue(new DummyError());
   
-      return expect(service.getFilteredUsers())
+      return expect(service.getFilteredUserList({} as AuthUser))
         .rejects.toThrow(DummyError);
     });
   });
@@ -91,21 +91,21 @@ describe('UserService', () => {
   
       userRepo.findOneOrFail.mockResolvedValue(user);
   
-      return expect(service.getUserById(expected.id))
+      return expect(service.getUserById({} as AuthUser, expected.id))
         .resolves.toStrictEqual(expected);
     });
 
     it('should throw NotFoundException when user is missing', () => {
       userRepo.findOneOrFail.mockRejectedValue(new EntityNotFoundError(UserEntity, undefined));
       
-      return expect(service.getUserById(1))
+      return expect(service.getUserById({} as AuthUser, 1))
         .rejects.toThrow(NotFoundException);
     });
     
     it('should rethrow when unhandled exception occurs', () => {
       userRepo.findOneOrFail.mockRejectedValue(new DummyError());
       
-      return expect(service.getUserById(1))
+      return expect(service.getUserById({} as AuthUser, 1))
         .rejects.toThrow(DummyError);
     });
   });

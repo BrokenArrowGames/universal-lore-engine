@@ -21,7 +21,6 @@ import { UserEntity } from '@db/entity/user.entity';
 import { AuthUser } from '../auth/auth.dto';
 import { AuthService } from '../auth/auth.service';
 import { EntityValidationError } from '@db/entity/util/entity-validation-error';
-import { ValidationError } from 'class-validator';
 
 export type UserFilter = FilterQuery<UserDto, 'name'>;
 
@@ -33,23 +32,14 @@ export class UserService {
     private readonly authService: AuthService,
   ) {}
 
-  public async getFilteredUsers(filterQuery?: UserFilter): Promise<UserDto[]> {
-    const entities = await this.userRepo.find({
-      select: { id: true, name: true },
-      where: {
-        name: filterQuery?.name ? Like(`%${filterQuery?.name}%`) : null,
-      },
-      ...filterProps(filterQuery),
-    });
-
-    return entities.map(UserDtoFromEntity);
-  }
-
-  public async getUserById(id: number): Promise<UserDto> {
+  public async getUserById(
+    _currentUser: AuthUser,
+    id: number
+  ): Promise<UserDto> {
     try {
       const entity = await this.userRepo.findOneOrFail({
         where: { id },
-        relations: ['created_by', 'modified_by'],
+        relations: ['createdBy', 'modifiedBy'],
       });
       return UserDtoFromEntity(entity);
     } catch (err) {
@@ -65,10 +55,11 @@ export class UserService {
     currentUser: AuthUser,
     reqData: CreateUserRequest,
   ): Promise<UserDto> {
+    // TODO: ensure you have permission to give the selected role
     const newUser = this.userRepo.create({
       ...reqData,
-      created_by: { id: currentUser.id },
-      modified_by: { id: currentUser.id },
+      createdBy: { id: currentUser.id },
+      modifiedBy: { id: currentUser.id },
     });
     if (!reqData.password) {
       throw new EntityValidationError(newUser, ['password required']);
@@ -112,8 +103,7 @@ export class UserService {
 
     const newUser = this.userRepo.create({
       ...userData,
-      created_by: { id: currentUser.id },
-      modified_by: { id: currentUser.id },
+      modifiedBy: { id: currentUser.id },
     });
 
     await this.userRepo.manager.transaction(async (manager) => {
@@ -160,5 +150,20 @@ export class UserService {
         throw err;
       }
     }
+  }
+
+  public async getFilteredUserList(
+    _currentUser: AuthUser,
+    filterQuery?: UserFilter
+  ): Promise<UserDto[]> {
+    const entities = await this.userRepo.find({
+      select: { id: true, name: true },
+      where: {
+        name: filterQuery?.name ? Like(`${filterQuery?.name}`) : null,
+      },
+      ...filterProps(filterQuery),
+    });
+
+    return entities.map(UserDtoFromEntity);
   }
 }
