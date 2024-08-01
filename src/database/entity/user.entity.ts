@@ -21,6 +21,7 @@ import {
 import { matchers } from './util/regex';
 import { EntityValidationError } from './util/entity-validation-error';
 import { getOrder, Order } from './util/column-order';
+import { RoleName } from '@mod/auth/role/types';
 
 @Entity({ schema: 'app', name: 'user' })
 export class UserEntity extends BaseEntity {
@@ -37,31 +38,34 @@ export class UserEntity extends BaseEntity {
   @Matches(matchers.ALNUM_UNDER_DASH, { message: 'User name format invalid' })
   name: string;
 
+  @Column({ default: RoleName.USER })
+  role: RoleName;
+
   @Order(9996)
   @Column({ name: 'created_by', nullable: false })
-  created_by_id: number;
+  createdById: number;
 
   @Order(9996)
   @ManyToOne(() => UserEntity)
   @JoinColumn({ name: 'created_by' })
-  created_by: UserEntity;
+  createdBy: UserEntity;
 
   @Order(9997)
-  @CreateDateColumn()
-  created_at: Date;
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
 
   @Order(9998)
   @Column({ name: 'modified_by', nullable: false })
-  modified_by_id: number;
+  modifiedById: number;
 
   @Order(9998)
   @ManyToOne(() => UserEntity)
   @JoinColumn({ name: 'modified_by' })
-  modified_by: UserEntity;
+  modifiedBy: UserEntity;
 
   @Order(9999)
-  @UpdateDateColumn()
-  modified_at: Date;
+  @UpdateDateColumn({ name: 'modified_at' })
+  modifiedAt: Date;
 
   @BeforeInsert()
   validateInsert() {

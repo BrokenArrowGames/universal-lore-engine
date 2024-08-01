@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Post,
   Put,
   Query,
@@ -17,7 +18,11 @@ import {
   UpdateSubjectRequest,
 } from './subject.dto';
 import { AppRequest } from '@util/app-request';
-import { AuthGuard } from '../auth/auth.guard';
+import { AuthGuard } from '@mod/auth/auth.guard';
+import { ForbiddenError, subject } from '@casl/ability';
+import { AuthAction } from '@mod/auth/util/auth-actions';
+import { AuthSubject } from '@mod/auth/util/auth-subjects';
+import { AllowGuestSession } from '@mod/auth/decorator/allow-guest-session';
 
 // TODO: auth checks
 @Controller('subject')
@@ -25,37 +30,51 @@ import { AuthGuard } from '../auth/auth.guard';
 export class SubjectController {
   constructor(private readonly subjectService: SubjectService) {}
 
-  @Get()
-  public getFilteredSubjects(
-    @Query() filterQuery: SubjectFilter,
-  ): Promise<SubjectDto[]> {
-    return this.subjectService.getFilteredSubjects(filterQuery);
-  }
-
-  @Get(':id')
-  public getSubjectById(@Param() params: { id: number }): Promise<SubjectDto> {
-    return this.subjectService.getSubjectById(params.id);
-  }
-
   @Post()
   public createSubject(
     @Req() req: AppRequest,
-    @Body() user: CreateSubjectRequest,
+    @Body() body: CreateSubjectRequest,
   ): Promise<SubjectDto> {
-    return this.subjectService.createSubject(req.user, user);
+    ForbiddenError.from(req.user.ability).throwUnlessCan(AuthAction.CREATE, AuthSubject.SUBJECT);
+    return this.subjectService.createSubject(req.user, body);
+  }
+
+  @Get(':id')
+  @AllowGuestSession()
+  public readSubject(
+    @Req() req: AppRequest,
+    @Param('id', ParseIntPipe) id: number
+  ): Promise<SubjectDto> {
+    ForbiddenError.from(req.user.ability).throwUnlessCan(AuthAction.READ, AuthSubject.SUBJECT);
+    return this.subjectService.getSubjectById(req.user, id);
   }
 
   @Put(':id')
   public updateSubject(
     @Req() req: AppRequest,
-    @Param() params: { id: number },
-    @Body() user: UpdateSubjectRequest,
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: UpdateSubjectRequest,
   ): Promise<SubjectDto> {
-    return this.subjectService.updateSubject(req.user, params.id, user);
+    ForbiddenError.from(req.user.ability).throwUnlessCan(AuthAction.UPDATE, AuthSubject.SUBJECT);
+    return this.subjectService.updateSubject(req.user, id, body);
   }
 
   @Delete(':id')
-  public deleteSubject(@Param() params: { id: number }): Promise<void> {
-    return this.subjectService.deleteSubject(params.id);
+  public deleteSubject(
+    @Req() req: AppRequest,
+    @Param('id', ParseIntPipe) id: number
+  ): Promise<void> {
+    ForbiddenError.from(req.user.ability).throwUnlessCan(AuthAction.DELETE, AuthSubject.SUBJECT);
+    return this.subjectService.deleteSubject(req.user, id);
+  }
+
+  @Get()
+  @AllowGuestSession()
+  public listSubjects(
+    @Req() req: AppRequest,
+    @Query() filterQuery: SubjectFilter,
+  ): Promise<SubjectDto[]> {
+    ForbiddenError.from(req.user.ability).throwUnlessCan(AuthAction.LIST, AuthSubject.SUBJECT);
+    return this.subjectService.getFilteredSubjectList(req.user, filterQuery);
   }
 }

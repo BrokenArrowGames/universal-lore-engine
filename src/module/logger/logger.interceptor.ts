@@ -35,6 +35,8 @@ export class LoggerInterceptor implements NestInterceptor {
       tap((data) => {
         this.logger.log({
           message: 'response',
+          method: req.method,
+          url: req.originalUrl,
           status: res.statusCode,
           sessionId: req.session?.id ?? null,
           correlationId: req.correlationId,

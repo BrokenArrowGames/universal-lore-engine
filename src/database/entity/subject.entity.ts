@@ -14,6 +14,9 @@ export enum SubjectType {
 
 @Entity({ schema: 'app', name: 'subject' })
 export class SubjectEntity extends AbstractEntity {
+  @Column({ default: true })
+  private: boolean;
+  
   @Column({ unique: true })
   @MinLength(3, { message: 'Subject key too short' })
   @MaxLength(Math.pow(2, 6), { message: 'Subject key too long' })
@@ -37,6 +40,11 @@ export class SubjectEntity extends AbstractEntity {
   @MinLength(3, { message: 'Subject description too short' })
   @MaxLength(Math.pow(2, 14), { message: 'Subject description too long' })
   long_description: string;
+
+  @Column({ nullable: true })
+  @MinLength(3, { message: 'Subject note too short' })
+  @MaxLength(Math.pow(2, 14), { message: 'Subject note too long' })
+  note: string;
 
   @Column()
   type: SubjectType;

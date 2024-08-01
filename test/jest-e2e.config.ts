@@ -10,6 +10,7 @@ const config: Config = {
     '^.+\\.(t|j)s$': 'ts-jest',
   },
   moduleNameMapper: {
+    '@/(.*)': ['<rootDir>/src/$1'],
     '@db/(.*)': ['<rootDir>/src/database/$1'],
     '@err/(.*)': ['<rootDir>/src/error/$1'],
     '@mod/(.*)': ['<rootDir>/src/module/$1'],

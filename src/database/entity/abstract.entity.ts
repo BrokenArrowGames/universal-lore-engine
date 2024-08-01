@@ -22,20 +22,20 @@ export abstract class AbstractEntity extends BaseEntity {
   @Order(9996)
   @ManyToOne(() => UserEntity, { nullable: false })
   @JoinColumn({ name: 'created_by' })
-  created_by: UserEntity;
+  createdBy: UserEntity;
 
   @Order(9997)
-  @CreateDateColumn()
-  created_at: Date;
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
 
   @Order(9998)
   @ManyToOne(() => UserEntity, { nullable: false })
   @JoinColumn({ name: 'modified_by' })
-  modified_by: UserEntity;
+  modifiedBy: UserEntity;
 
   @Order(9999)
-  @UpdateDateColumn()
-  modified_at: Date;
+  @UpdateDateColumn({ name: 'modified_at' })
+  modifiedAt: Date;
 
   @BeforeInsert()
   validateInsert() {

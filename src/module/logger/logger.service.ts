@@ -5,13 +5,33 @@ import pino from 'pino';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class AppLogger implements LoggerService {
+  private readonly REDACTED: string;
+
   private context: string = 'NestJS';
   private logger: pino.Logger;
 
   constructor(private readonly config?: ConfigService<Config>) {
+    this.REDACTED = this.config.getOrThrow("constants.redacted", INFER);
+    const transport = config.getOrThrow("app.local", INFER)
+      ? {
+        target: "pino-pretty",
+        options: {
+          levelFirst: true,
+          singleLine: true,
+          errorLikeObjectKeys: ["error", "cause", "stack"],
+          errorProps: ["error", "cause", "stack"].join(","),
+          ignore: "context,message,error.ability",
+          messageFormat: "{context} - {message}"
+        }
+      } : undefined;
+
     this.logger = pino({
-      level: this.config?.get('app.local', INFER) ? 'debug' : 'info',
-      redact: ['*.auth_token', '*.password'],
+      level: this.config?.get('app.log', INFER) ?? 'error',
+      redact: {
+        paths: ['*.auth_token', '*.password'],
+        censor: this.REDACTED,
+      },
+      transport
     });
   }
 
