@@ -99,6 +99,9 @@ importers:
       cognito-local:
         specifier: ^3.23.3
         version: 3.23.3
+      connect-typeorm:
+        specifier: ^2.0.0
+        version: 2.0.0(typeorm@0.3.20(pg@8.12.0)(ts-node@10.9.2(@types/node@20.14.12)(typescript@5.5.3)))
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
@@ -978,6 +981,9 @@ packages:
   '@types/cookiejar@2.1.5':
     resolution: {integrity: sha512-he+DHOWReW0nghN24E1WUqM0efK4kI9oTqDm6XmK8ZPe2djZ90BSNdGnIyCLzCPw7/pogPlGbzI2wHGGmi4O/Q==}
 
+  '@types/debug@0.0.31':
+    resolution: {integrity: sha512-LS1MCPaQKqspg7FvexuhmDbWUhE2yIJ+4AgVIyObfc06/UKZ8REgxGNjZc82wPLWmbeOm7S+gSsLgo75TanG4A==}
+
   '@types/duplexify@3.6.4':
     resolution: {integrity: sha512-2eahVPsd+dy3CL6FugAzJcxoraWhUghZGEQJns1kTKfCXWKJ5iG/VkaB05wRVrDKHfOFKqb0X0kXh91eE99RZg==}
 
@@ -1583,6 +1589,11 @@ packages:
   concat-stream@1.6.2:
     resolution: {integrity: sha512-27HBghJxjiZtIk3Ycvn/4kbJk/1uZuJFfuPEns6LaEvpvG1f0hTea8lilrouyo9mVc2GWdcEZ8OLoGmSADlrCw==}
     engines: {'0': node >= 0.8}
+
+  connect-typeorm@2.0.0:
+    resolution: {integrity: sha512-0OcbHJkNMTJjSrbcKGljr4PKgRq13Dds7zQq3+8oaf4syQTgGvGv9OgnXo2qg+Bljkh4aJNzIvW74QOVLn8zrw==}
+    peerDependencies:
+      typeorm: ^0.3.0
 
   consola@2.15.3:
     resolution: {integrity: sha512-9vAdYbHj6x2fLKC4+oPH0kFzY/orMZyG2Aj+kNylHxKGJ/Ed4dpNyAQYwJOdqO4zdM7XpVHmyejQDcQHrnuXbw==}
@@ -5222,6 +5233,8 @@ snapshots:
 
   '@types/cookiejar@2.1.5': {}
 
+  '@types/debug@0.0.31': {}
+
   '@types/duplexify@3.6.4':
     dependencies:
       '@types/node': 20.14.12
@@ -5956,6 +5969,16 @@ snapshots:
       inherits: 2.0.4
       readable-stream: 2.3.8
       typedarray: 0.0.6
+
+  connect-typeorm@2.0.0(typeorm@0.3.20(pg@8.12.0)(ts-node@10.9.2(@types/node@20.14.12)(typescript@5.5.3))):
+    dependencies:
+      '@types/debug': 0.0.31
+      '@types/express-session': 1.18.0
+      debug: 4.3.5
+      express-session: 1.18.0
+      typeorm: 0.3.20(pg@8.12.0)(ts-node@10.9.2(@types/node@20.14.12)(typescript@5.5.3))
+    transitivePeerDependencies:
+      - supports-color
 
   consola@2.15.3: {}
 

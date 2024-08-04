@@ -9,6 +9,7 @@ import { AuthModule } from '@mod/auth/auth.module';
 import { UserEntity } from '@db/entity/user.entity';
 import { Config, INFER, LoadConfig } from '@util/config';
 import { BootstrapModule } from '@/bootstrap/bootstrap.module';
+import { SessionEntity } from '@/database/entity/session.entity';
 
 @Module({
   imports: [
@@ -33,7 +34,7 @@ import { BootstrapModule } from '@/bootstrap/bootstrap.module';
         // logging: true
       }),
     }),
-    TypeOrmModule.forFeature([UserEntity]),
+    TypeOrmModule.forFeature([UserEntity, SessionEntity]),
     BootstrapModule,
     AuthModule,
     UserModule,
