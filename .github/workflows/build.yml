@@ -64,11 +64,11 @@ jobs:
       #   run: pnpm test:e2e
       - name: Integration Tests
         run: pnpm test:int
-    smokeTests:
-      runs-on: ubuntu-latest
-      steps:
-        - name: Integration Tests
-          run: pnpm test:int
+  smoke-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Integration Tests
+        run: pnpm test:int
 
     services:
       postgres:
