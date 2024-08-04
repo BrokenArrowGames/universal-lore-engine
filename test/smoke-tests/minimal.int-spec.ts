@@ -42,17 +42,17 @@ describe('Smoke Tests', () => {
 
     it('GET /user should fail', async () => {
       const res = await fetch(`${baseUrl}/user`);
-      expect(res.status).toBe(403);
+      expect(res.status).toBe(401);
     });
 
     it('GET /user/{any} should fail', async () => {
       const res = await fetch(`${baseUrl}/user/${otherId}`);
-      expect(res.status).toBe(403);
+      expect(res.status).toBe(401);
     });
 
     it('PUT /user/{any} should fail', async () => {
       const res = await fetch(`${baseUrl}/user/${otherId}`, { method: "PUT" });
-      expect(res.status).toBe(403);
+      expect(res.status).toBe(401);
     });
 
     it('GET /subject should succeed', async () => {
@@ -67,7 +67,7 @@ describe('Smoke Tests', () => {
     
     it('PUT /subject/{private} should fail', async () => {
       const res = await fetch(`${baseUrl}/subject/${unownedSubjectId}`, { method: "PUT" });
-      expect(res.status).toBe(403);
+      expect(res.status).toBe(401);
     });
   });
   
