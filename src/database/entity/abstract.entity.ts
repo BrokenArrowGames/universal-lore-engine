@@ -4,6 +4,7 @@ import {
   BeforeUpdate,
   CreateDateColumn,
   DataSource,
+  DeleteDateColumn,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -19,23 +20,27 @@ export abstract class AbstractEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Order(9996)
+  @Order(9995)
   @ManyToOne(() => UserEntity, { nullable: false })
   @JoinColumn({ name: 'created_by' })
   createdBy: UserEntity;
 
-  @Order(9997)
+  @Order(9996)
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @Order(9998)
+  @Order(9997)
   @ManyToOne(() => UserEntity, { nullable: false })
   @JoinColumn({ name: 'modified_by' })
   modifiedBy: UserEntity;
 
-  @Order(9999)
+  @Order(9998)
   @UpdateDateColumn({ name: 'modified_at' })
   modifiedAt: Date;
+
+  @Order(9999)
+  @DeleteDateColumn({ name: 'deleted_at' })
+  deletedAt: Date;
 
   @BeforeInsert()
   validateInsert() {

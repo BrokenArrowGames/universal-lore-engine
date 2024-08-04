@@ -119,7 +119,7 @@ export class SubjectService {
       });
       ForbiddenError.from(currentUser.ability).throwUnlessCan(AuthAction.DELETE, subject(AuthSubject.SUBJECT, subjectEntity));
 
-      await this.subjectRepo.remove([subjectEntity]);
+      await this.subjectRepo.softRemove([subjectEntity]);
     } catch (err) {
       if (err instanceof EntityNotFoundError) {
         throw new NotFoundException('record not found', { cause: err });

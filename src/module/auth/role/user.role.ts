@@ -12,17 +12,17 @@ export const UserRole = new Role(
     
     // subject
     new Permission(AuthAction.CREATE,      AuthSubject.SUBJECT),
-    new Permission(AuthAction.READ,        AuthSubject.SUBJECT, undefined, Condition.CreatedByCurrentUser),
-    new Permission(AuthAction.UPDATE,      AuthSubject.SUBJECT, undefined, Condition.CreatedByCurrentUser),
-    new Permission(AuthAction.DELETE_SOFT, AuthSubject.SUBJECT, undefined, Condition.CreatedByCurrentUser),
-    new Permission(AuthAction.LIST,        AuthSubject.SUBJECT, undefined, Condition.CreatedByCurrentUser),
+    new Permission(AuthAction.READ,        AuthSubject.SUBJECT, undefined, Condition.PropEqualsCurrentUserId("createdBy.id")),
+    new Permission(AuthAction.UPDATE,      AuthSubject.SUBJECT, undefined, Condition.PropEqualsCurrentUserId("createdBy.id")),
+    new Permission(AuthAction.DELETE_SOFT, AuthSubject.SUBJECT, undefined, Condition.PropEqualsCurrentUserId("createdBy.id")),
+    new Permission(AuthAction.LIST,        AuthSubject.SUBJECT, undefined, Condition.PropEqualsCurrentUserId("createdBy.id")),
     // new Permission(AuthAction.READ_PRIVATE, AuthSubject.SUBJECT, undefined, (ctx) => { id: { $eq: ctx.currentUser.readList } }),
     // new Permission(AuthAction.UPDATE,       AuthSubject.SUBJECT, undefined, (ctx) => { id: { $eq: ctx.currentUser.writeList } }),
 
     // user
-    new Permission(AuthAction.READ,        AuthSubject.USER, undefined, Condition.IsCurrentUser),
-    new Permission(AuthAction.UPDATE,      AuthSubject.USER, undefined, Condition.IsCurrentUser),
-    new Permission(AuthAction.READ,        AuthSubject.USER, undefined, Condition.IsCurrentUser),
-    new Permission(AuthAction.DELETE_SOFT, AuthSubject.USER, undefined, Condition.IsCurrentUser),
+    new Permission(AuthAction.READ,        AuthSubject.USER, undefined, Condition.PropEqualsCurrentUserId("id")),
+    new Permission(AuthAction.UPDATE,      AuthSubject.USER, undefined, Condition.PropEqualsCurrentUserId("id")),
+    new Permission(AuthAction.READ,        AuthSubject.USER, undefined, Condition.PropEqualsCurrentUserId("id")),
+    new Permission(AuthAction.DELETE_SOFT, AuthSubject.USER, undefined, Condition.PropEqualsCurrentUserId("id")),
   ]
 );
