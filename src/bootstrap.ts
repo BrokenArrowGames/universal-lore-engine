@@ -10,6 +10,7 @@ import { SessionEntity } from './database/entity/session.entity';
 
 export async function bootstrap(app) {
   const config = app.get(ConfigService<Config>);
+  app.enableCors();
 
   app.useLogger(new AppLogger(config));
   app.useGlobalInterceptors(new LoggerInterceptor(new AppLogger(config)));
@@ -29,6 +30,7 @@ export async function bootstrap(app) {
         // TODO: tls in dev/prod envs
         secure: !config.getOrThrow('app.local', INFER),
         maxAge: config.getOrThrow('auth.session.maxage', INFER),
+        httpOnly: true,
       },
       resave: false,
       saveUninitialized: false,
