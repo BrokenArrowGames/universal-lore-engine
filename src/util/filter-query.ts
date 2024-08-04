@@ -14,7 +14,7 @@ export function filterProps<T, K extends keyof T>(
   limit: FilterRange = { min: 0, max: 100, def: 10 },
 ) {
   if (!query) {
-    return { skip: 0, take: limit.def }
+    return { skip: 0, take: limit.def };
   }
 
   query.limit = Math.min(

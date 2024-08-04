@@ -19,7 +19,7 @@ import {
 } from './subject.dto';
 import { AppRequest } from '@util/app-request';
 import { AuthGuard } from '@mod/auth/auth.guard';
-import { ForbiddenError, subject } from '@casl/ability';
+import { ForbiddenError } from '@casl/ability';
 import { AuthAction } from '@mod/auth/util/auth-actions';
 import { AuthSubject } from '@mod/auth/util/auth-subjects';
 import { AllowGuestSession } from '@mod/auth/decorator/allow-guest-session';
@@ -35,7 +35,10 @@ export class SubjectController {
     @Req() req: AppRequest,
     @Body() body: CreateSubjectRequest,
   ): Promise<SubjectDto> {
-    ForbiddenError.from(req.user.ability).throwUnlessCan(AuthAction.CREATE, AuthSubject.SUBJECT);
+    ForbiddenError.from(req.user.ability).throwUnlessCan(
+      AuthAction.CREATE,
+      AuthSubject.SUBJECT,
+    );
     return this.subjectService.createSubject(req.user, body);
   }
 
@@ -43,9 +46,12 @@ export class SubjectController {
   @AllowGuestSession()
   public readSubject(
     @Req() req: AppRequest,
-    @Param('id', ParseIntPipe) id: number
+    @Param('id', ParseIntPipe) id: number,
   ): Promise<SubjectDto> {
-    ForbiddenError.from(req.user.ability).throwUnlessCan(AuthAction.READ, AuthSubject.SUBJECT);
+    ForbiddenError.from(req.user.ability).throwUnlessCan(
+      AuthAction.READ,
+      AuthSubject.SUBJECT,
+    );
     return this.subjectService.getSubjectById(req.user, id);
   }
 
@@ -55,16 +61,22 @@ export class SubjectController {
     @Param('id', ParseIntPipe) id: number,
     @Body() body: UpdateSubjectRequest,
   ): Promise<SubjectDto> {
-    ForbiddenError.from(req.user.ability).throwUnlessCan(AuthAction.UPDATE, AuthSubject.SUBJECT);
+    ForbiddenError.from(req.user.ability).throwUnlessCan(
+      AuthAction.UPDATE,
+      AuthSubject.SUBJECT,
+    );
     return this.subjectService.updateSubject(req.user, id, body);
   }
 
   @Delete(':id')
   public deleteSubject(
     @Req() req: AppRequest,
-    @Param('id', ParseIntPipe) id: number
+    @Param('id', ParseIntPipe) id: number,
   ): Promise<void> {
-    ForbiddenError.from(req.user.ability).throwUnlessCan(AuthAction.DELETE, AuthSubject.SUBJECT);
+    ForbiddenError.from(req.user.ability).throwUnlessCan(
+      AuthAction.DELETE,
+      AuthSubject.SUBJECT,
+    );
     return this.subjectService.deleteSubject(req.user, id);
   }
 
@@ -74,7 +86,10 @@ export class SubjectController {
     @Req() req: AppRequest,
     @Query() filterQuery: SubjectFilter,
   ): Promise<SubjectDto[]> {
-    ForbiddenError.from(req.user.ability).throwUnlessCan(AuthAction.LIST, AuthSubject.SUBJECT);
+    ForbiddenError.from(req.user.ability).throwUnlessCan(
+      AuthAction.LIST,
+      AuthSubject.SUBJECT,
+    );
     return this.subjectService.getFilteredSubjectList(req.user, filterQuery);
   }
 }

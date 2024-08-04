@@ -22,12 +22,15 @@ export class Users1722728782521 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     const SYS_USER = this.config.app.sysUser;
-    const { id: sysUser } = await queryRunner.manager.findOneByOrFail(UserEntity, { name: SYS_USER });
+    const { id: sysUser } = await queryRunner.manager.findOneByOrFail(
+      UserEntity,
+      { name: SYS_USER },
+    );
 
     const users = this.users.map((name) =>
       queryRunner.manager.create(UserEntity, {
         name,
-        role: name.includes("admin") ? RoleName.ADMIN : RoleName.USER,
+        role: name.includes('admin') ? RoleName.ADMIN : RoleName.USER,
         email: `${name}@localhost`,
         createdBy: { id: sysUser },
         modifiedBy: { id: sysUser },
@@ -37,7 +40,9 @@ export class Users1722728782521 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    const toRemove = await queryRunner.manager.findBy(UserEntity, { name: In(this.users) });
+    const toRemove = await queryRunner.manager.findBy(UserEntity, {
+      name: In(this.users),
+    });
     queryRunner.manager.softRemove(UserEntity, toRemove);
   }
 }

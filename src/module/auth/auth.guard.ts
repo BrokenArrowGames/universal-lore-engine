@@ -1,4 +1,9 @@
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { AppRequest } from '@util/app-request';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -7,7 +12,6 @@ import { UserEntity } from '@db/entity/user.entity';
 import { AppLogger } from '@mod/logger/logger.service';
 import { createAbility } from './util/ability';
 import { RoleName } from './role/types';
-
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -26,7 +30,11 @@ export class AuthGuard implements CanActivate {
     return this.validateRequest(req, clazz, handler);
   }
 
-  private async validateRequest(req: AppRequest, clazz: any, handler: any): Promise<boolean> {
+  private async validateRequest(
+    req: AppRequest,
+    clazz: any,
+    handler: any,
+  ): Promise<boolean> {
     if (req.session?.token) {
       const user = await this.userRepo.findOneByOrFail({
         name: req.session?.username,
@@ -42,15 +50,18 @@ export class AuthGuard implements CanActivate {
       return true;
     }
 
-    const metadata = Reflect.getMetadata("Controller:AllowGuestSession", clazz.prototype[handler.name]);
+    const metadata = Reflect.getMetadata(
+      'Controller:AllowGuestSession',
+      clazz.prototype[handler.name],
+    );
     if (metadata === true) {
       req.user = {
         id: 0,
-        name: "guest",
+        name: 'guest',
         role: RoleName.GUEST,
-        ability: createAbility({ id: 0, role: RoleName.GUEST })
+        ability: createAbility({ id: 0, role: RoleName.GUEST }),
       };
-      
+
       return true;
     }
 

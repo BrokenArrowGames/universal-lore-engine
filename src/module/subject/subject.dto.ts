@@ -67,9 +67,7 @@ export function SubjectEntityFromDto(
     tags: dto.tags.map(SubjectTagEntityFromDto),
     short_description: dto.short_description,
     long_description: dto.long_description,
-    modifiedBy: dto.modifiedBy
-      ? UserEntityFromDto(dto.modifiedBy)
-      : undefined,
+    modifiedBy: dto.modifiedBy ? UserEntityFromDto(dto.modifiedBy) : undefined,
     modifiedAt: dto.modifiedAt,
   };
 }

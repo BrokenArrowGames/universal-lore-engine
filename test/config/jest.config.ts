@@ -11,7 +11,7 @@ const config: Config = {
     '<rootDir>/src/database/seed',
   ],
   collectCoverageFrom: ['./src/**/*.(t|j)s'],
-  coverageReporters: ['json-summary', 'text'],
+  coverageReporters: ['json-summary'],
   coverageDirectory: './coverage',
 };
 

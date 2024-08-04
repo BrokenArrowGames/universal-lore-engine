@@ -15,7 +15,7 @@ export async function bootstrap(app) {
   app.useLogger(new AppLogger(config));
   app.useGlobalInterceptors(new LoggerInterceptor(new AppLogger(config)));
   app.useGlobalFilters(new GlobalErrorFilter(new AppLogger(config)));
-  
+
   const sessionRepository = app.get(getRepositoryToken(SessionEntity));
 
   // TODO: need real session store, such as redis

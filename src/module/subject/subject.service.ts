@@ -33,21 +33,30 @@ export class SubjectService {
     @InjectRepository(SubjectEntity)
     private readonly subjectRepo: Repository<SubjectEntity>,
   ) {
-    this.REDACTED = this.config.getOrThrow("constants.redacted", INFER);
+    this.REDACTED = this.config.getOrThrow('constants.redacted', INFER);
   }
 
   public async getSubjectById(
     currentUser: AuthUser,
-    id: number
+    id: number,
   ): Promise<SubjectDto> {
     try {
       const entity = await this.subjectRepo.findOneOrFail({
         where: { id },
         relations: ['tags', 'createdBy', 'modifiedBy'],
       });
-      ForbiddenError.from(currentUser.ability).throwUnlessCan(AuthAction.READ, subject(AuthSubject.SUBJECT, entity));
+      ForbiddenError.from(currentUser.ability).throwUnlessCan(
+        AuthAction.READ,
+        subject(AuthSubject.SUBJECT, entity),
+      );
       // TODO: write test for this
-      if (currentUser.ability.cannot(AuthAction.READ, subject(AuthSubject.SUBJECT, entity), "note")) {
+      if (
+        currentUser.ability.cannot(
+          AuthAction.READ,
+          subject(AuthSubject.SUBJECT, entity),
+          'note',
+        )
+      ) {
         entity.note = this.REDACTED;
       }
       return SubjectDtoFromEntity(entity);
@@ -91,8 +100,14 @@ export class SubjectService {
     subjectData: UpdateSubjectRequest,
   ): Promise<SubjectDto> {
     try {
-      const entity = await this.subjectRepo.findOneOrFail({ where: { id: subjectId }, relations: ["createdBy"]});
-      ForbiddenError.from(currentUser.ability).throwUnlessCan(AuthAction.UPDATE, subject(AuthSubject.SUBJECT, entity));
+      const entity = await this.subjectRepo.findOneOrFail({
+        where: { id: subjectId },
+        relations: ['createdBy'],
+      });
+      ForbiddenError.from(currentUser.ability).throwUnlessCan(
+        AuthAction.UPDATE,
+        subject(AuthSubject.SUBJECT, entity),
+      );
     } catch (err) {
       if (err instanceof EntityNotFoundError) {
         throw new NotFoundException('record not found', { cause: err });
@@ -112,12 +127,18 @@ export class SubjectService {
     return SubjectDtoFromEntity(result);
   }
 
-  public async deleteSubject(currentUser: AuthUser, subjectId: number): Promise<void> {
+  public async deleteSubject(
+    currentUser: AuthUser,
+    subjectId: number,
+  ): Promise<void> {
     try {
       const subjectEntity = await this.subjectRepo.findOneByOrFail({
         id: subjectId,
       });
-      ForbiddenError.from(currentUser.ability).throwUnlessCan(AuthAction.DELETE, subject(AuthSubject.SUBJECT, subjectEntity));
+      ForbiddenError.from(currentUser.ability).throwUnlessCan(
+        AuthAction.DELETE,
+        subject(AuthSubject.SUBJECT, subjectEntity),
+      );
 
       await this.subjectRepo.softRemove([subjectEntity]);
     } catch (err) {
@@ -160,19 +181,27 @@ export class SubjectService {
       where: { id: In(tmpEntities.map(({ id }) => id)) },
       relations: ['tags'],
     });
-    return entities.map(SubjectDtoFromEntity)
-      // TODO: write test for this
-      .map(dto => {
-        if (currentUser.ability.cannot(AuthAction.READ, subject(AuthSubject.SUBJECT, dto))) {
-          return {
-            id: dto.id,
-            type: dto.type,
-            display_name: this.REDACTED,
-            tags: [{ id: -1, name: this.REDACTED }],
-          } as SubjectDto;
-        } else {
-          return dto;
-        }
-      });
+    return (
+      entities
+        .map(SubjectDtoFromEntity)
+        // TODO: write test for this
+        .map((dto) => {
+          if (
+            currentUser.ability.cannot(
+              AuthAction.READ,
+              subject(AuthSubject.SUBJECT, dto),
+            )
+          ) {
+            return {
+              id: dto.id,
+              type: dto.type,
+              display_name: this.REDACTED,
+              tags: [{ id: -1, name: this.REDACTED }],
+            } as SubjectDto;
+          } else {
+            return dto;
+          }
+        })
+    );
   }
 }

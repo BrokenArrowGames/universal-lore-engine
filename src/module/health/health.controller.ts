@@ -7,12 +7,12 @@ export class HealthController {
   @Get()
   public async health(): Promise<HealthDto> {
     return {
-      status: "ok",
+      status: 'ok',
       version: Constants.APP_VERSION,
       build: {
         id: Constants.BUILD_ID,
         timestamp: Constants.BUILD_TIMESTAMP,
-      }
+      },
     };
   }
 }

@@ -4,11 +4,11 @@ import {
   ArgumentsHost,
   HttpException,
 } from '@nestjs/common';
-import { AppRequest, AppResponse, ErrorResponse } from '@util/app-request';
+import { AppRequest, ErrorResponse } from '@util/app-request';
 import { AppLogger } from '@mod/logger/logger.service';
 import { AppError } from './app-error';
 import { ForbiddenError } from '@casl/ability';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 
 @Catch(Error)
 export class GlobalErrorFilter implements ExceptionFilter {
@@ -53,7 +53,7 @@ export class GlobalErrorFilter implements ExceptionFilter {
       url: req.originalUrl,
       ...errRes,
       correlationId: req.correlationId,
-      cause
+      cause,
     });
     this.logger.debug({
       error: exception,

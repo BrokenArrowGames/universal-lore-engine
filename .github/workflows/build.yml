@@ -48,7 +48,8 @@ jobs:
       - name: Build
         run: pnpm build
       - name: Unit Tests
-        run: pnpm test
+        run: pnpm test --reporters="github-actions"
+        
   smoke-tests:
     runs-on: ubuntu-latest
     steps:
@@ -61,7 +62,7 @@ jobs:
       - name: Code Generation
         run: pnpm prebuild
       - name: Integration Tests
-        run: pnpm test:int
+        run: pnpm test:int --reporters="github-actions"
 
     services:
       postgres:
