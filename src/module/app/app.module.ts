@@ -10,6 +10,7 @@ import { UserEntity } from '@db/entity/user.entity';
 import { Config, INFER, LoadConfig } from '@util/config';
 import { BootstrapModule } from '@/bootstrap/bootstrap.module';
 import { SessionEntity } from '@/database/entity/session.entity';
+import { HealthModule } from '../health/health.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { SessionEntity } from '@/database/entity/session.entity';
     }),
     TypeOrmModule.forFeature([UserEntity, SessionEntity]),
     BootstrapModule,
+    HealthModule,
     AuthModule,
     UserModule,
     SubjectModule,
