@@ -18,7 +18,7 @@ describe('Smoke Tests', () => {
 
   beforeAll(async () => {
     app = globalThis.app;
-    baseUrl = `http://localhost:${process.env.APP_PORT}`;
+    baseUrl = `http://127.0.0.1:${process.env.APP_PORT}`;
 
     const userRepo: Repository<UserEntity> = app.get(getRepositoryToken(UserEntity));
     tstAdminId = (await userRepo.findOneByOrFail({ name: "tst_admin" })).id;
@@ -140,7 +140,7 @@ describe('Smoke Tests', () => {
       expect(res.status).toBe(403);
     });
   });
-  
+
   describe('admin user', () => {
     let selfId: number;
     let otherId: number;
