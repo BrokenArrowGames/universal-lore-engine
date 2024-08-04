@@ -18,6 +18,20 @@ env:
   GIT_BRANCH: ${{ inputs.git-branch || github.ref }}
   PNPM_VERSION: ${{ inputs.pnpm-version || '8' }}
   NODE_VERSION: ${{ inputs.node-version || '20' }}
+  # 
+  DB_APP_HOST: "127.0.0.1"
+  DB_APP_PORT: 5432
+  DB_APP_USERNAME: postgres
+  DB_APP_PASSWORD: mysecretpassword
+  DB_APP_DATABASE: postgres
+  DB_APP_SCHEMA: app
+  AUTH_SESSION_SECRET: mysecretpassword
+  ROOT_USER_NAME: sys_admin
+  ROOT_USER_PASS: mysecretpassword
+  ROOT_USER_MAIL: admin@example.com
+  TEST_USER_NAME: sys_user
+  TEST_USER_PASS: mysecretpassword
+  TEST_USER_MAIL: user@example.com
 
 jobs:
   build:
@@ -44,7 +58,22 @@ jobs:
         run: pnpm install --frozen-lockfile --strict-peer-dependencies
       - name: Build
         run: pnpm build
-      - name: Unit Test
+      - name: Unit Tests
         run: pnpm test
-      - name: E2E Test
+      - name: E2E Tests
         run: pnpm test:e2e
+      - name: Integration Tests
+        run: pnpm test:int-ci
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: ${{ env.DB_APP_PASSWORD }}
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - ${{ env.DB_APP_PORT }}:5432

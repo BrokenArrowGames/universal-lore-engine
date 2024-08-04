@@ -10,5 +10,5 @@ export const dataSource = new DataSource({
     database: process.env.DB_APP_DATABASE,
     entities: ["src/database/entity/**/*.ts"],
     migrations: ["test/database/seed/**/*.ts"],
-    migrationsTableName: "typeorm.test-seed-migrations",
+    migrationsTableName: "public.test-seed-migrations",
 });

@@ -6,7 +6,7 @@ export function MockDbRepo<T>(): jest.MaybeMockedDeep<Repository<T>> {
   const manager = {
     findOneByOrFail: jest.fn(),
     save: jest.fn(),
-    remove: jest.fn(),
+    softRemove: jest.fn(),
     transaction: jest.fn(),
     update: jest.fn(),
   };

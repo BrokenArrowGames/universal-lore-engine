@@ -5,9 +5,6 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
-  "config": {
-    "type": "migration"
-  },
   "scripts": {
     "build": "nest build",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
@@ -16,11 +13,9 @@
     "start:debug": "nest start --debug --watch",
     "test": "jest --config ./test/jest.config.ts",
     "test:cov": "pnpm test -- --coverage && ts-node scripts/generate-badge.ts",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/jest/bin/jest --runInBand --config ./test/jest.config.ts",
     "test:e2e": "jest --config ./test/jest-e2e.config.ts",
-    "test:e2e-debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/jest/bin/jest --runInBand --config ./test/jest-e2e.config.ts",
     "test:int": "jest --config ./test/jest-int.config.ts",
-    "test:int-debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/jest/bin/jest --runInBand --config ./test/jest-int.config.ts",
+    "test:int-ci": "jest --config ./test/jest-int.config.ts",
     "orm:show": "pnpm typeorm-ts-node-commonjs -d config/db-${npm_config_type}.ts migration:show",
     "orm:run": "pnpm typeorm-ts-node-commonjs -d config/db-${npm_config_type}.ts migration:run",
     "orm:revert": "pnpm typeorm-ts-node-commonjs -d config/db-${npm_config_type}.ts migration:revert",
@@ -58,6 +53,7 @@
     "@types/supertest": "^6.0.0",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^7.0.0",
+    "cognito-local": "^3.23.3",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",

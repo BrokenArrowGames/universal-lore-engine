@@ -79,6 +79,7 @@ export const LoadConfig = (): Config => ({
   aws: {
     region: 'us-east-1',
     cognito: {
+      endpoint: process.env.COGNITO_ENDPOINT,
       pool: process.env.COGNITO_POOL_ID,
       client: process.env.COGNITO_CLIENT_ID,
     },

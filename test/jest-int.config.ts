@@ -9,7 +9,8 @@ const config: Config = {
   transform: {
     '^.+\\.(t|j)s$': 'ts-jest',
   },
-  // setupFiles: ['dotenv/config'],
+  globalSetup: "<rootDir>/test/jest-int.setup.ts",
+  globalTeardown: "<rootDir>/test/jest-int.teardown.ts",
   moduleNameMapper: {
     '@/(.*)': ['<rootDir>/src/$1'],
     '@db/(.*)': ['<rootDir>/src/database/$1'],
