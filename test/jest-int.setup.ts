@@ -9,7 +9,7 @@ import 'dotenv/config';
 
 export default async (globalConfig, projectConfig) => {
   const logger = pino({ level: "error" });
-  await RunMigrations(logger, { hostname: "ule-db-2" });
+  await RunMigrations(logger, { hostname: "127.0.0.1" });
   await StartCognito(logger, { hostname: "127.0.0.1", port: 9596, PoolName: "ule-int-test" });
   await StartApp(logger, { port: 9595, level: "fatal" });
 };
