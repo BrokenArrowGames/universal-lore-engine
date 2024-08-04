@@ -31,6 +31,8 @@ env:
   TEST_USER_NAME: sys_user
   TEST_USER_PASS: mysecretpassword
   TEST_USER_MAIL: user@example.com
+  AWS_ACCESS_KEY_ID: dummy_key_id
+  AWS_SECRET_ACCESS_KEY: dummy_key
 
 jobs:
   build:
