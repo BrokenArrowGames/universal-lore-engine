@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { UserEntity } from '@db/entity/user.entity';
 import { AppLogger } from '@mod/logger/logger.service';
 import { createAbility } from './util/ability';
+import { RoleName } from './role/types';
 
 
 @Injectable()
@@ -34,9 +35,11 @@ export class AuthGuard implements CanActivate {
       req.user = {
         id: user.id,
         name: user.name,
-        ability: createAbility(user)
+        role: user.role,
+        ability: createAbility(user),
       };
 
+      console.log(req.user?.role ?? "guest");
       return true;
     }
 
@@ -45,8 +48,11 @@ export class AuthGuard implements CanActivate {
       req.user = {
         id: 0,
         name: "guest",
-        ability: createAbility({ id: 0, role: null })
+        role: RoleName.GUEST,
+        ability: createAbility({ id: 0, role: RoleName.GUEST })
       };
+      
+      console.log(req.user?.role ?? "guest");
       return true;
     }
 
