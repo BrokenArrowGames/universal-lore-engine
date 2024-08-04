@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { AppRequest } from '@util/app-request';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -64,6 +64,6 @@ export class AuthGuard implements CanActivate {
       correlationId: req.correlationId,
       body: req.body ?? null,
     });
-    return false;
+    throw new UnauthorizedException();
   }
 }
