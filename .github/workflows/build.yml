@@ -85,6 +85,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --strict-peer-dependencies
 
+      - name: Code Generation
+        run: pnpm prebuild
+
       - name: Integration Tests
         run: pnpm test:int
 
