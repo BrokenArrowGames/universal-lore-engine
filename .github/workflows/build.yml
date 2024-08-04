@@ -62,7 +62,7 @@ jobs:
       - name: Code Generation
         run: pnpm prebuild
       - name: Integration Tests
-        run: pnpm test:int -- --reporters="github-actions"
+        run: pnpm test:int --reporters="github-actions"
 
     services:
       postgres:
