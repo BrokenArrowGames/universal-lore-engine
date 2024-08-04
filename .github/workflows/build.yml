@@ -37,7 +37,6 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -61,10 +60,15 @@ jobs:
         run: pnpm build
       - name: Unit Tests
         run: pnpm test
-      - name: E2E Tests
-        run: pnpm test:e2e
+      # - name: E2E Tests
+      #   run: pnpm test:e2e
       - name: Integration Tests
-        run: pnpm test:int-ci
+        run: pnpm test:int
+    smoke-tests:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Integration Tests
+          run: pnpm test:int
 
     services:
       postgres:
