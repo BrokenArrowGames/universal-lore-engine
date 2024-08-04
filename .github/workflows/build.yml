@@ -18,6 +18,7 @@ env:
   GIT_BRANCH: ${{ inputs.git-branch || github.ref }}
   PNPM_VERSION: ${{ inputs.pnpm-version || '8' }}
   NODE_VERSION: ${{ inputs.node-version || '20' }}
+  APP_ENV: LOCAL
   DB_APP_HOST: "127.0.0.1"
   DB_APP_PORT: 5432
   DB_APP_USERNAME: postgres

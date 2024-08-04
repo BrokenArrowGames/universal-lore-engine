@@ -1,6 +1,12 @@
 import { ConfigGetOptions } from '@nestjs/config';
 import { Level } from 'pino';
 
+export enum AppEnv {
+  LOCAL = "LOCAL",
+  DEV = "DEV",
+  PROD = "PROD",
+};
+
 export type Config = {
   user: {
     root: {
@@ -16,7 +22,7 @@ export type Config = {
   }
   app: {
     local: boolean;
-    env: 'local' | 'dev' | 'prod';
+    env: AppEnv;
     port: number;
     log: Level;
     sysUser: string;
@@ -50,8 +56,8 @@ export type Config = {
 
 export const LoadConfig = (): Config => ({
   app: {
-    local: process.env.APP_ENV === 'local',
-    env: process.env.APP_ENV as 'local' | 'dev' | 'prod',
+    local: process.env.APP_ENV === AppEnv.LOCAL,
+    env: process.env.APP_ENV as AppEnv,
     port: +(process.env.APP_PORT ?? 3000),
     log: process.env.APP_LOG_LEVEL as Level ?? 'info',
     sysUser: "system",
