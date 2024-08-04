@@ -3,16 +3,19 @@ import { UserEntity } from '../../../src/database/entity/user.entity';
 import { Config, LoadConfig } from '@util/config';
 import { RoleName } from '@/module/auth/role/types';
 
-export class Users1720681560358 implements MigrationInterface {
+export class Users1722728782521 implements MigrationInterface {
   private config: Config = LoadConfig();
   private users: string[] = [
     'tst_admin',
+    'tst_user',
     'tst_user1',
     'tst_user2',
     'tst_author',
+    'tst_reader',
     'tst_reader1',
     'tst_reader2',
     'tst_dm',
+    'tst_player',
     'tst_player1',
     'tst_player2',
   ];
@@ -34,6 +37,7 @@ export class Users1720681560358 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    queryRunner.manager.delete(UserEntity, { name: In(this.users) });
+    const toRemove = await queryRunner.manager.findBy(UserEntity, { name: In(this.users) });
+    queryRunner.manager.softRemove(UserEntity, toRemove);
   }
 }

@@ -1,6 +1,4 @@
 export const Condition = {
-  IsCurrentUser: (ctx) => ({ id: { $eq: ctx.currentUser.id } }),
-  CreatedByCurrentUser: (ctx) => ({ "createdBy.id": { $eq: ctx.currentUser.id } }),
-  IsPublic: (_ctx) => ({ private: { $eq: false } }),
-  IsPrivate: (_ctx) => ({ private: { $eq: true } }),
+  PropEqualsCurrentUserId: (prop: string) => (ctx) => ({ [prop]: { $eq: ctx.currentUser.id } }),
+  PropEquals: (prop: string, value: any) => (_ctx) => ({ [prop]: { $eq: value }}),
 };

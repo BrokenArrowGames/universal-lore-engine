@@ -17,6 +17,7 @@ import {
   BaseEntity,
   DataSource,
   BeforeUpdate,
+  DeleteDateColumn,
 } from 'typeorm';
 import { matchers } from './util/regex';
 import { EntityValidationError } from './util/entity-validation-error';
@@ -41,31 +42,35 @@ export class UserEntity extends BaseEntity {
   @Column({ default: RoleName.USER })
   role: RoleName;
 
-  @Order(9996)
+  @Order(9993)
   @Column({ name: 'created_by', nullable: false })
   createdById: number;
 
-  @Order(9996)
+  @Order(9994)
   @ManyToOne(() => UserEntity)
   @JoinColumn({ name: 'created_by' })
   createdBy: UserEntity;
 
-  @Order(9997)
+  @Order(9995)
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @Order(9998)
+  @Order(9996)
   @Column({ name: 'modified_by', nullable: false })
   modifiedById: number;
 
-  @Order(9998)
+  @Order(9997)
   @ManyToOne(() => UserEntity)
   @JoinColumn({ name: 'modified_by' })
   modifiedBy: UserEntity;
 
-  @Order(9999)
+  @Order(9998)
   @UpdateDateColumn({ name: 'modified_at' })
   modifiedAt: Date;
+
+  @Order(9999)
+  @DeleteDateColumn({ name: 'deleted_at' })
+  deletedAt: Date;
 
   @BeforeInsert()
   validateInsert() {

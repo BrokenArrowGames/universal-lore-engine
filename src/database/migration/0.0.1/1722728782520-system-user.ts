@@ -1,7 +1,8 @@
 import { Config, LoadConfig } from "@/util/config";
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class SystemUser1722492557508 implements MigrationInterface {
+export class SystemUser1722728782520 implements MigrationInterface {
+    name = 'InitialTables1722728782520';
     config: Config = LoadConfig();
 
     public async createSystemUser(queryRunner: QueryRunner, sysUserName: string) {
@@ -23,7 +24,8 @@ export class SystemUser1722492557508 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        const sysUserName = this.config.app.sysUser;
-        await queryRunner.query(`DELETE FROM "app"."user" WHERE "name" = '${sysUserName}'`);
+        await queryRunner.query(`DELETE FROM "app"."subject"`);
+        await queryRunner.query(`DELETE FROM "app"."subject_tag"`);
+        await queryRunner.query(`DELETE FROM "app"."user"`);
     }
 }

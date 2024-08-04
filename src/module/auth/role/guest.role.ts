@@ -9,8 +9,8 @@ export const GuestRole = new Role(
     // inherited
     
     // subject
-    new Permission(AuthAction.READ, AuthSubject.SUBJECT, undefined, Condition.IsPublic),
-    new Permission(AuthAction.LIST, AuthSubject.SUBJECT, undefined, Condition.IsPublic),
+    new Permission(AuthAction.READ, AuthSubject.SUBJECT, undefined, Condition.PropEquals("private", false)),
+    new Permission(AuthAction.LIST, AuthSubject.SUBJECT, undefined, Condition.PropEquals("private", false)),
     new InvertedPermission(AuthAction.READ, AuthSubject.SUBJECT, ["note"]),
 
     // user

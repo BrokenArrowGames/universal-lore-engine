@@ -141,7 +141,7 @@ export class UserService {
           id: userId,
         });
         this.authService.deleteUser(userEntity.name);
-        await manager.remove([userEntity]);
+        await manager.softRemove([userEntity]);
       });
     } catch (err) {
       if (err instanceof EntityNotFoundError) {
