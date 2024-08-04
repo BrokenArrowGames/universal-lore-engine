@@ -12,8 +12,6 @@ export async function StartSession(baseUrl: string, username: string, password: 
   const correlationId = res.headers.get("App-Correlation-Id");
 
   return async (url: string, options?: RequestInit) => {
-    console.log(cookie);
-    console.log(correlationId);
     const res = await fetch(`${baseUrl}${url}`, {
       ...(options ?? {}),
       headers: {
