@@ -22,9 +22,10 @@
       "@/*": ["src/*"],
       "@db/*": ["src/database/*"],
       "@err/*": ["src/error/*"],
+      "@gen/*": ["src/generated/*"],
       "@mod/*": ["src/module/*"],
-      "@util/*": ["src/util/*"],
       "@test/*": ["test/*"],
+      "@util/*": ["src/util/*"],
     }
   },
   "include": ["src/", "test/"],
