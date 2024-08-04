@@ -299,7 +299,7 @@ describe('UserService', () => {
       userRepo.manager.findOneByOrFail.mockResolvedValue(user);
 
       await service.deleteUser({} as AuthUser, 0);
-      return expect(userRepo.manager.remove).toHaveBeenCalledTimes(1);
+      return expect(userRepo.manager.softRemove).toHaveBeenCalledTimes(1);
     });
 
     it('should throw NotFoundException when entity not found', () => {
@@ -313,7 +313,7 @@ describe('UserService', () => {
       const user = RandomMockUser();
         
       userRepo.manager.findOneByOrFail.mockResolvedValue(user);
-      userRepo.manager.remove.mockRejectedValue(new DummyError());
+      userRepo.manager.softRemove.mockRejectedValue(new DummyError());
       
       return expect(service.deleteUser({} as AuthUser, 0))
         .rejects.toThrow(DummyError);

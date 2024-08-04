@@ -1,11 +1,8 @@
 import { INestApplication } from '@nestjs/common';
-import { InitIntegrationTest } from './util/init-integration';
-import { SessionFetchFn, StartSession } from './util/fetch-with-session';
+import { SessionFetchFn, StartSession } from '../util/fetch-with-session';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { UserEntity } from '@/database/entity/user.entity';
 import { In, Not, Repository } from 'typeorm';
-import { ConfigService } from '@nestjs/config';
-import { Config, INFER } from '@/util/config';
 import { SubjectEntity } from '@/database/entity/subject.entity';
 
 describe('Smoke Tests', () => {
@@ -20,14 +17,12 @@ describe('Smoke Tests', () => {
   let publicSubjectId: number;
 
   beforeAll(async () => {
-    app = await InitIntegrationTest();
+    app = globalThis.app;
     baseUrl = `http://localhost:${process.env.APP_PORT}`;
-    
-    const config: ConfigService<Config> = app.get(ConfigService<Config>);
 
     const userRepo: Repository<UserEntity> = app.get(getRepositoryToken(UserEntity));
-    tstAdminId = (await userRepo.findOneByOrFail({ name: config.getOrThrow("user.root.name", INFER) })).id;
-    tstUserId = (await userRepo.findOneByOrFail({ name: config.getOrThrow("user.test.name", INFER) })).id;
+    tstAdminId = (await userRepo.findOneByOrFail({ name: "tst_admin" })).id;
+    tstUserId = (await userRepo.findOneByOrFail({ name: "tst_user" })).id;
     
     const subjectRepo: Repository<SubjectEntity> = app.get(getRepositoryToken(SubjectEntity));
     tstAdminSubjectId = (await subjectRepo.findOneByOrFail({ private: true, createdBy: { id: tstAdminId } })).id;
@@ -46,7 +41,7 @@ describe('Smoke Tests', () => {
     let unownedSubjectId: number;
 
     beforeEach(async () => {
-      sfetch = await StartSession(baseUrl, process.env.ROOT_USER_NAME, process.env.ROOT_USER_PASS);
+      sfetch = await StartSession(baseUrl, "tst_admin", "mysecretpassword");
       selfId = tstAdminId;
       otherId = tstUserId;
       ownedSubjectId = tstAdminSubjectId;
@@ -121,7 +116,7 @@ describe('Smoke Tests', () => {
     let unownedSubjectId: number;
 
     beforeEach(async () => {
-      sfetch = await StartSession(baseUrl, process.env.TEST_USER_NAME, process.env.TEST_USER_PASS);
+      sfetch = await StartSession(baseUrl, "tst_user", "mysecretpassword");
       selfId = tstUserId;
       otherId = tstAdminId;
       ownedSubjectId = tstUserSubjectId;
