@@ -30,10 +30,6 @@ describe('Smoke Tests', () => {
     publicSubjectId = (await subjectRepo.findOneByOrFail({ private: false, createdBy: { id: Not(In([tstAdminId, tstUserId])) } })).id;
   });
 
-  afterAll(async () => {
-    return app.close();
-  });
-
   describe('admin user', () => {
     let selfId: number;
     let otherId: number;

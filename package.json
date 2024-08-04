@@ -15,7 +15,6 @@
     "test:cov": "pnpm test -- --coverage && ts-node scripts/generate-badge.ts",
     "test:e2e": "jest --config ./test/jest-e2e.config.ts",
     "test:int": "jest --config ./test/jest-int.config.ts",
-    "test:int-ci": "jest --config ./test/jest-int.config.ts",
     "orm:show": "pnpm typeorm-ts-node-commonjs -d config/db-${npm_config_type}.ts migration:show",
     "orm:run": "pnpm typeorm-ts-node-commonjs -d config/db-${npm_config_type}.ts migration:run",
     "orm:revert": "pnpm typeorm-ts-node-commonjs -d config/db-${npm_config_type}.ts migration:revert",
