@@ -9,7 +9,12 @@ import { AwsModule } from '@/module/aws/aws.module';
 import { AuthService } from '@/module/auth/auth.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity]), AwsModule, AuthModule, UserModule],
-  providers: [BootstrapService, AuthService, UserService]
+  imports: [
+    TypeOrmModule.forFeature([UserEntity]),
+    AwsModule,
+    AuthModule,
+    UserModule,
+  ],
+  providers: [BootstrapService, AuthService, UserService],
 })
 export class BootstrapModule {}

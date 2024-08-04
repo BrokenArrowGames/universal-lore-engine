@@ -1,2 +1,1 @@
-export class DummyError extends Error {
-}
+export class DummyError extends Error {}

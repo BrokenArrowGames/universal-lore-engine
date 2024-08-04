@@ -34,7 +34,7 @@ export class UserService {
 
   public async getUserById(
     _currentUser: AuthUser,
-    id: number
+    id: number,
   ): Promise<UserDto> {
     try {
       const entity = await this.userRepo.findOneOrFail({
@@ -133,7 +133,7 @@ export class UserService {
 
   public async deleteUser(
     _currentUser: AuthUser,
-    userId: number
+    userId: number,
   ): Promise<void> {
     try {
       await this.userRepo.manager.transaction(async (manager) => {
@@ -154,7 +154,7 @@ export class UserService {
 
   public async getFilteredUserList(
     _currentUser: AuthUser,
-    filterQuery?: UserFilter
+    filterQuery?: UserFilter,
   ): Promise<UserDto[]> {
     const entities = await this.userRepo.find({
       select: { id: true, name: true },

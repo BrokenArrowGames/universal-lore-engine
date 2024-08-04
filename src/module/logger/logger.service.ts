@@ -11,19 +11,20 @@ export class AppLogger implements LoggerService {
   private logger: pino.Logger;
 
   constructor(private readonly config?: ConfigService<Config>) {
-    this.REDACTED = this.config.getOrThrow("constants.redacted", INFER);
-    const transport = config.getOrThrow("app.local", INFER)
+    this.REDACTED = this.config.getOrThrow('constants.redacted', INFER);
+    const transport = config.getOrThrow('app.local', INFER)
       ? {
-        target: "pino-pretty",
-        options: {
-          levelFirst: true,
-          singleLine: true,
-          errorLikeObjectKeys: ["error", "cause", "stack"],
-          errorProps: ["error", "cause", "stack"].join(","),
-          ignore: "context,message,error.ability",
-          messageFormat: "{context} - {message}"
+          target: 'pino-pretty',
+          options: {
+            levelFirst: true,
+            singleLine: true,
+            errorLikeObjectKeys: ['error', 'cause', 'stack'],
+            errorProps: ['error', 'cause', 'stack'].join(','),
+            ignore: 'context,message,error.ability',
+            messageFormat: '{context} - {message}',
+          },
         }
-      } : undefined;
+      : undefined;
 
     this.logger = pino({
       level: this.config?.get('app.log', INFER) ?? 'error',
@@ -31,7 +32,7 @@ export class AppLogger implements LoggerService {
         paths: ['*.auth_token', '*.password'],
         censor: this.REDACTED,
       },
-      transport
+      transport,
     });
   }
 

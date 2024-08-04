@@ -2,10 +2,10 @@ import { ConfigGetOptions } from '@nestjs/config';
 import { Level } from 'pino';
 
 export enum AppEnv {
-  LOCAL = "LOCAL",
-  DEV = "DEV",
-  PROD = "PROD",
-};
+  LOCAL = 'LOCAL',
+  DEV = 'DEV',
+  PROD = 'PROD',
+}
 
 export type Config = {
   user: {
@@ -13,13 +13,13 @@ export type Config = {
       name: string;
       password: string;
       email: string;
-    },
+    };
     test: {
       name: string;
       password: string;
       email: string;
-    }
-  }
+    };
+  };
   app: {
     local: boolean;
     env: AppEnv;
@@ -59,20 +59,20 @@ export const LoadConfig = (): Config => ({
     local: process.env.APP_ENV === AppEnv.LOCAL,
     env: process.env.APP_ENV as AppEnv,
     port: +(process.env.APP_PORT ?? 3000),
-    log: process.env.APP_LOG_LEVEL as Level ?? 'info',
-    sysUser: "system",
+    log: (process.env.APP_LOG_LEVEL as Level) ?? 'info',
+    sysUser: 'system',
   },
   user: {
     root: {
-      name: process.env.ROOT_USER_NAME ?? "sys_admin",
+      name: process.env.ROOT_USER_NAME ?? 'sys_admin',
       password: process.env.ROOT_USER_PASS,
-      email: process.env.ROOT_USER_MAIL
+      email: process.env.ROOT_USER_MAIL,
     },
     test: {
-      name: process.env.TEST_USER_NAME ?? "sys_tst_user",
+      name: process.env.TEST_USER_NAME ?? 'sys_tst_user',
       password: process.env.TEST_USER_PASS,
       email: process.env.TEST_USER_MAIL,
-    }
+    },
   },
   database: {
     host: process.env.DB_APP_HOST,
@@ -97,8 +97,8 @@ export const LoadConfig = (): Config => ({
     },
   },
   constants: {
-    redacted: "[REDACTED]",
-  }
+    redacted: '[REDACTED]',
+  },
 });
 
 export const INFER: ConfigGetOptions = { infer: true };

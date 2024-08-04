@@ -1,4 +1,4 @@
-export const AllowGuestSessionKey = "Controller:AllowGuestSession";
+export const AllowGuestSessionKey = 'Controller:AllowGuestSession';
 
 export function AllowGuestSession() {
   return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {

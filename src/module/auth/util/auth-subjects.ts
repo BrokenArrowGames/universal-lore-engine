@@ -1,4 +1,4 @@
 export enum AuthSubject {
-  USER    = "USER",
-  SUBJECT = "SUBJECT",
-};
+  USER = 'USER',
+  SUBJECT = 'SUBJECT',
+}

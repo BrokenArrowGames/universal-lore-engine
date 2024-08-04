@@ -16,7 +16,7 @@ export enum SubjectType {
 export class SubjectEntity extends AbstractEntity {
   @Column({ default: true })
   private: boolean;
-  
+
   @Column({ unique: true })
   @MinLength(3, { message: 'Subject key too short' })
   @MaxLength(Math.pow(2, 6), { message: 'Subject key too long' })

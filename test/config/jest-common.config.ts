@@ -15,5 +15,5 @@ export const BaseConfig: Config = {
     '@mod/(.*)': ['<rootDir>/src/module/$1'],
     '@test/(.*)': ['<rootDir>/test/$1'],
     '@util/(.*)': ['<rootDir>/src/util/$1'],
-  }
+  },
 };
