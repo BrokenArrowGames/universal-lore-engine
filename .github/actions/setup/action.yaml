@@ -1,0 +1,27 @@
+name: Setup
+inputs:
+  branch:
+    description: 'git branch to checkout'
+    required: true
+    default: 'dev'
+  nodeVersion:
+    description: 'version of node to use'
+    required: true
+    default: '20'
+runs:
+  using: "composite"
+  steps:
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        run_install: false
+
+    - name: Install Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.nodeVersion }}
+        cache: 'pnpm'
+        
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile --strict-peer-dependencies
+      shell: bash
