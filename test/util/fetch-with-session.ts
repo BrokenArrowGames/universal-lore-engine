@@ -8,7 +8,6 @@ export async function StartSession(baseUrl: string, username: string, password: 
   });
   expect(res.status).toBe(200);
   
-  console.log(username, password);
   const cookie = res.headers.get("Set-Cookie");
   const correlationId = res.headers.get("App-Correlation-Id");
 

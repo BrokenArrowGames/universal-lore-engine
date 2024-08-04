@@ -39,7 +39,7 @@ export class AuthGuard implements CanActivate {
         ability: createAbility(user),
       };
 
-      console.log(req.user?.role ?? "guest");
+      console.log(req.user?.role ?? "undefined/guest");
       return true;
     }
 
@@ -52,7 +52,7 @@ export class AuthGuard implements CanActivate {
         ability: createAbility({ id: 0, role: RoleName.GUEST })
       };
       
-      console.log(req.user?.role ?? "guest");
+      console.log(req.user?.role ?? "undefined/guest");
       return true;
     }
 
