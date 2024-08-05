@@ -1,12 +1,12 @@
-'use strict';
+"use strict";
 /* eslint-disable no-var, prefer-rest-params, @typescript-eslint/no-this-alias */
 
-const Module = require('module');
-const assert = require('assert');
+const Module = require("module");
+const assert = require("assert");
 
 var require: any = function require(path) {
-  assert(typeof path == 'string', 'path must be a string');
-  assert(path, 'missing path');
+  assert(typeof path == "string", "path must be a string");
+  assert(path, "missing path");
 
   const _this = this;
   const next = function (_path) {
@@ -16,13 +16,13 @@ var require: any = function require(path) {
   // console.log('mock-require: requiring <' + path + '> from <' + this.id + '>');
 
   switch (path) {
-    case 'punycode':
+    case "punycode":
       // replace module with other
       if (/\/punycode\//.exec(this.filename)) {
         // imports from within original resolve into original module
-        return next('punycode');
+        return next("punycode");
       } else {
-        return next('punycode/');
+        return next("punycode/");
       }
 
     default:

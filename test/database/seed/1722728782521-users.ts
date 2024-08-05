@@ -1,23 +1,23 @@
-import { In, MigrationInterface, QueryRunner } from 'typeorm';
-import { UserEntity } from '../../../src/database/entity/user.entity';
-import { Config, LoadConfig } from '@util/config';
-import { RoleName } from '@/module/auth/role/types';
+import { In, MigrationInterface, QueryRunner } from "typeorm";
+import { UserEntity } from "../../../src/database/entity/user.entity";
+import { Config, LoadConfig } from "@util/config";
+import { RoleName } from "@/module/auth/role/types";
 
 export class Users1722728782521 implements MigrationInterface {
   private config: Config = LoadConfig();
   private users: string[] = [
-    'tst_admin',
-    'tst_user',
-    'tst_user1',
-    'tst_user2',
-    'tst_author',
-    'tst_reader',
-    'tst_reader1',
-    'tst_reader2',
-    'tst_dm',
-    'tst_player',
-    'tst_player1',
-    'tst_player2',
+    "tst_admin",
+    "tst_user",
+    "tst_user1",
+    "tst_user2",
+    "tst_author",
+    "tst_reader",
+    "tst_reader1",
+    "tst_reader2",
+    "tst_dm",
+    "tst_player",
+    "tst_player1",
+    "tst_player2",
   ];
 
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -30,7 +30,7 @@ export class Users1722728782521 implements MigrationInterface {
     const users = this.users.map((name) =>
       queryRunner.manager.create(UserEntity, {
         name,
-        role: name.includes('admin') ? RoleName.ADMIN : RoleName.USER,
+        role: name.includes("admin") ? RoleName.ADMIN : RoleName.USER,
         email: `${name}@localhost`,
         createdBy: { id: sysUser },
         modifiedBy: { id: sysUser },

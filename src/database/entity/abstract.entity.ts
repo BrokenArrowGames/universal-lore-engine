@@ -9,11 +9,11 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from 'typeorm';
-import { Order, getOrder } from './util/column-order';
-import { UserEntity } from './user.entity';
-import { validateSync } from 'class-validator';
-import { EntityValidationError } from './util/entity-validation-error';
+} from "typeorm";
+import { Order, getOrder } from "./util/column-order";
+import { UserEntity } from "./user.entity";
+import { validateSync } from "class-validator";
+import { EntityValidationError } from "./util/entity-validation-error";
 
 export abstract class AbstractEntity extends BaseEntity {
   @Order(-1)
@@ -22,24 +22,24 @@ export abstract class AbstractEntity extends BaseEntity {
 
   @Order(9995)
   @ManyToOne(() => UserEntity, { nullable: false })
-  @JoinColumn({ name: 'created_by' })
+  @JoinColumn({ name: "created_by" })
   createdBy: UserEntity;
 
   @Order(9996)
-  @CreateDateColumn({ name: 'created_at' })
+  @CreateDateColumn({ name: "created_at" })
   createdAt: Date;
 
   @Order(9997)
   @ManyToOne(() => UserEntity, { nullable: false })
-  @JoinColumn({ name: 'modified_by' })
+  @JoinColumn({ name: "modified_by" })
   modifiedBy: UserEntity;
 
   @Order(9998)
-  @UpdateDateColumn({ name: 'modified_at' })
+  @UpdateDateColumn({ name: "modified_at" })
   modifiedAt: Date;
 
   @Order(9999)
-  @DeleteDateColumn({ name: 'deleted_at' })
+  @DeleteDateColumn({ name: "deleted_at" })
   deletedAt: Date;
 
   @BeforeInsert()

@@ -1,4 +1,4 @@
-import { SubjectTagEntity } from '@db/entity/subject-tag.entity';
+import { SubjectTagEntity } from "@db/entity/subject-tag.entity";
 
 export class SubjectTagDto {
   id: number;

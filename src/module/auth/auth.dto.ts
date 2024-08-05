@@ -1,5 +1,5 @@
-import { AnyAbility } from '@casl/ability';
-import { RoleName } from './role/types';
+import { AnyAbility } from "@casl/ability";
+import { RoleName } from "./role/types";
 
 export class AuthUser {
   id: number;

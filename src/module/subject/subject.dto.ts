@@ -1,15 +1,15 @@
-import { DeepPartial } from 'typeorm';
-import { SubjectEntity, SubjectType } from '@db/entity/subject.entity';
+import { DeepPartial } from "typeorm";
+import { SubjectEntity, SubjectType } from "@db/entity/subject.entity";
 import {
   UserDto,
   UserDtoFromEntity,
   UserEntityFromDto,
-} from '../user/user.dto';
+} from "../user/user.dto";
 import {
   SubjectTagDto,
   SubjectTagDtoFromEntity,
   SubjectTagEntityFromDto,
-} from './subject-tag.dto';
+} from "./subject-tag.dto";
 
 export class SubjectDto {
   id: number;
@@ -26,16 +26,16 @@ export class SubjectDto {
 
 export type CreateSubjectRequest = Omit<
   UserDto,
-  | 'id'
-  | 'long_description'
-  | 'createdBy'
-  | 'createdAt'
-  | 'modifiedBy'
-  | 'modifiedAt'
+  | "id"
+  | "long_description"
+  | "createdBy"
+  | "createdAt"
+  | "modifiedBy"
+  | "modifiedAt"
 > &
-  Required<Pick<SubjectDto, 'long_description'>>;
+  Required<Pick<SubjectDto, "long_description">>;
 
-export type UpdateSubjectRequest = Pick<UserDto, 'id'> &
+export type UpdateSubjectRequest = Pick<UserDto, "id"> &
   Partial<CreateSubjectRequest>;
 
 export function SubjectDtoFromEntity(entity: SubjectEntity): SubjectDto {

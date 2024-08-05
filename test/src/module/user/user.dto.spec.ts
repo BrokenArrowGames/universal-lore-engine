@@ -1,14 +1,14 @@
-import { UserEntity } from '@db/entity/user.entity';
+import { UserEntity } from "@db/entity/user.entity";
 import {
   UserDto,
   UserDtoFromEntity,
   UserEntityFromDto,
-} from '@mod/user/user.dto';
-import { RandomMockUser } from '@test/util/mock-user';
-import { RandomIntInRange, RandomName } from '@test/util/random';
+} from "@mod/user/user.dto";
+import { RandomMockUser } from "@test/util/mock-user";
+import { RandomIntInRange, RandomName } from "@test/util/random";
 
-describe('UserEntityFromDto', () => {
-  it('to only have expected properties', () => {
+describe("UserEntityFromDto", () => {
+  it("to only have expected properties", () => {
     const dto: UserDto = {
       id: RandomIntInRange(0, 9999),
       name: RandomName(),
@@ -23,8 +23,8 @@ describe('UserEntityFromDto', () => {
   });
 });
 
-describe('UserDtoFromEntity', () => {
-  it('to only have expected properties', () => {
+describe("UserDtoFromEntity", () => {
+  it("to only have expected properties", () => {
     const entity: UserEntity = RandomMockUser();
 
     const dto = UserDtoFromEntity(entity);

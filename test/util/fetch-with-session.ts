@@ -9,14 +9,14 @@ export async function StartSession(
   password: string,
 ): Promise<SessionFetchFn> {
   const res = await fetch(`${baseUrl}/auth/login`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: Buffer.from(`{"username": "${username}", "password": "${password}"}`),
   });
   expect(res.status).toBe(200);
 
-  const cookie = res.headers.get('Set-Cookie');
-  const correlationId = res.headers.get('App-Correlation-Id');
+  const cookie = res.headers.get("Set-Cookie");
+  const correlationId = res.headers.get("App-Correlation-Id");
 
   return async (url: string, options?: RequestInit) => {
     const res = await fetch(`${baseUrl}${url}`, {
@@ -24,7 +24,7 @@ export async function StartSession(
       headers: {
         ...(options?.headers ?? {}),
         Cookie: cookie,
-        'App-Correlation-Id': correlationId,
+        "App-Correlation-Id": correlationId,
       },
     });
     return {

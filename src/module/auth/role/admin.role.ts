@@ -1,7 +1,7 @@
-import { AuthAction } from '../util/auth-actions';
-import { AuthSubject } from '../util/auth-subjects';
-import { Permission, Role, RoleName } from './types';
-import { UserRole } from './user.role';
+import { AuthAction } from "../util/auth-actions";
+import { AuthSubject } from "../util/auth-subjects";
+import { Permission, Role, RoleName } from "./types";
+import { UserRole } from "./user.role";
 
 export const AdminRole = new Role(RoleName.ADMIN, [
   // inherited

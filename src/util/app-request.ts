@@ -1,5 +1,5 @@
-import { Session } from 'express-session';
-import { AuthUser } from '@mod/auth/auth.dto';
+import { Session } from "express-session";
+import { AuthUser } from "@mod/auth/auth.dto";
 
 export interface AppSession extends Session {
   username: string;

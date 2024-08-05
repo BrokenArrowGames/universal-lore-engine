@@ -1,7 +1,7 @@
-import { TestBed } from '@automock/jest';
-import { AppLogger } from '@mod/logger/logger.service';
+import { TestBed } from "@automock/jest";
+import { AppLogger } from "@mod/logger/logger.service";
 
-describe('AppLogger', () => {
+describe("AppLogger", () => {
   let service: AppLogger;
 
   beforeEach(async () => {
@@ -10,7 +10,7 @@ describe('AppLogger', () => {
     service = unit;
   });
 
-  it('should be defined', () => {
+  it("should be defined", () => {
     expect(service).toBeDefined();
   });
 });

@@ -1,35 +1,35 @@
-import { LoggerService, Scope, Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { Config, INFER } from '@util/config';
-import pino from 'pino';
+import { LoggerService, Scope, Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { Config, INFER } from "@util/config";
+import pino from "pino";
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class AppLogger implements LoggerService {
   private readonly REDACTED: string;
 
-  private context: string = 'NestJS';
+  private context: string = "NestJS";
   private logger: pino.Logger;
 
   constructor(private readonly config?: ConfigService<Config>) {
-    this.REDACTED = this.config.getOrThrow('constants.redacted', INFER);
-    const transport = config.getOrThrow('app.local', INFER)
+    this.REDACTED = this.config.getOrThrow("constants.redacted", INFER);
+    const transport = config.getOrThrow("app.local", INFER)
       ? {
-          target: 'pino-pretty',
+          target: "pino-pretty",
           options: {
             levelFirst: true,
             singleLine: true,
-            errorLikeObjectKeys: ['error', 'cause', 'stack'],
-            errorProps: ['error', 'cause', 'stack'].join(','),
-            ignore: 'context,message,error.ability',
-            messageFormat: '{context} - {message}',
+            errorLikeObjectKeys: ["error", "cause", "stack"],
+            errorProps: ["error", "cause", "stack"].join(","),
+            ignore: "context,message,error.ability",
+            messageFormat: "{context} - {message}",
           },
         }
       : undefined;
 
     this.logger = pino({
-      level: this.config?.get('app.log', INFER) ?? 'error',
+      level: this.config?.get("app.log", INFER) ?? "error",
       redact: {
-        paths: ['*.auth_token', '*.password'],
+        paths: ["*.auth_token", "*.password"],
         censor: this.REDACTED,
       },
       transport,
@@ -47,9 +47,9 @@ export class AppLogger implements LoggerService {
   ) {
     let context = this.context;
     const msg: object =
-      typeof message === 'object' ? (message as object) : { message };
+      typeof message === "object" ? (message as object) : { message };
     const subContext = optionalParams[optionalParams.length - 1];
-    if (typeof subContext === 'string') {
+    if (typeof subContext === "string") {
       context += `.${subContext}`;
     }
 
@@ -60,21 +60,21 @@ export class AppLogger implements LoggerService {
   }
 
   public log(message: any, ...optionalParams: any[]) {
-    this.printMessages('info', message, optionalParams);
+    this.printMessages("info", message, optionalParams);
   }
   public fatal(message: any, ...optionalParams: any[]) {
-    this.printMessages('fatal', message, optionalParams);
+    this.printMessages("fatal", message, optionalParams);
   }
   public error(message: any, ...optionalParams: any[]) {
-    this.printMessages('error', message, optionalParams);
+    this.printMessages("error", message, optionalParams);
   }
   public warn(message: any, ...optionalParams: any[]) {
-    this.printMessages('warn', message, optionalParams);
+    this.printMessages("warn", message, optionalParams);
   }
   public debug?(message: any, ...optionalParams: any[]) {
-    this.printMessages('debug', message, optionalParams);
+    this.printMessages("debug", message, optionalParams);
   }
   public verbose?(message: any, ...optionalParams: any[]) {
-    this.printMessages('trace', message, optionalParams);
+    this.printMessages("trace", message, optionalParams);
   }
 }

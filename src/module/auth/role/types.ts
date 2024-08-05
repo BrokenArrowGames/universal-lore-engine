@@ -1,10 +1,10 @@
-import { AuthSubject } from '../util/auth-subjects';
-import { AuthAction } from '../util/auth-actions';
+import { AuthSubject } from "../util/auth-subjects";
+import { AuthAction } from "../util/auth-actions";
 
 export enum RoleName {
-  GUEST = 'GUEST',
-  USER = 'USER',
-  ADMIN = 'ADMIN',
+  GUEST = "GUEST",
+  USER = "USER",
+  ADMIN = "ADMIN",
 }
 
 export interface AbilityUser {

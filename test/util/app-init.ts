@@ -1,11 +1,11 @@
-import { GlobalErrorFilter } from '@err/global-error.filter';
-import { AppModule } from '@mod/app/app.module';
-import { AuthGuard } from '@mod/auth/auth.guard';
-import { CognitoClientProviderToken } from '@mod/aws/cognito.provider';
-import { AppLogger } from '@mod/logger/logger.service';
-import { ExecutionContext, INestApplication } from '@nestjs/common';
-import { Test, TestingModule } from '@nestjs/testing';
-import * as session from 'express-session';
+import { GlobalErrorFilter } from "@err/global-error.filter";
+import { AppModule } from "@mod/app/app.module";
+import { AuthGuard } from "@mod/auth/auth.guard";
+import { CognitoClientProviderToken } from "@mod/aws/cognito.provider";
+import { AppLogger } from "@mod/logger/logger.service";
+import { ExecutionContext, INestApplication } from "@nestjs/common";
+import { Test, TestingModule } from "@nestjs/testing";
+import * as session from "express-session";
 
 export async function InitTestNestApp(): Promise<INestApplication> {
   const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -13,15 +13,15 @@ export async function InitTestNestApp(): Promise<INestApplication> {
   })
     .overrideProvider(CognitoClientProviderToken)
     .useValue({
-      send: () => ({ AuthenticationResult: { AccessToken: 'dummy-token' } }),
+      send: () => ({ AuthenticationResult: { AccessToken: "dummy-token" } }),
     })
     .overrideGuard(AuthGuard)
     .useValue({
       canActivate: (context: ExecutionContext) => {
         const req = context.switchToHttp().getRequest();
-        req.session.token = 'dummy-token';
-        req.session = { username: 'dummy-user' };
-        req.user = { id: 1, name: 'dummy-user' };
+        req.session.token = "dummy-token";
+        req.session = { username: "dummy-user" };
+        req.user = { id: 1, name: "dummy-user" };
         return true;
       },
     })
@@ -31,7 +31,7 @@ export async function InitTestNestApp(): Promise<INestApplication> {
   app.useGlobalFilters(new GlobalErrorFilter(new AppLogger()));
   app.use(
     session({
-      secret: 'dummy-secret',
+      secret: "dummy-secret",
       resave: false,
       saveUninitialized: false,
     }),

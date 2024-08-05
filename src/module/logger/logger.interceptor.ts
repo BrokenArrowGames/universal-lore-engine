@@ -3,16 +3,16 @@ import {
   NestInterceptor,
   ExecutionContext,
   CallHandler,
-} from '@nestjs/common';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { AppLogger } from './logger.service';
-import { AppRequest, AppResponse } from '@util/app-request';
+} from "@nestjs/common";
+import { Observable } from "rxjs";
+import { tap } from "rxjs/operators";
+import { AppLogger } from "./logger.service";
+import { AppRequest, AppResponse } from "@util/app-request";
 
 @Injectable()
 export class LoggerInterceptor implements NestInterceptor {
   constructor(private readonly logger: AppLogger) {
-    this.logger.setContext('HttpInterceptor');
+    this.logger.setContext("HttpInterceptor");
   }
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
@@ -21,10 +21,10 @@ export class LoggerInterceptor implements NestInterceptor {
     this.logger.setContext(context.getHandler().name);
 
     this.logger.log({
-      message: 'request',
+      message: "request",
       method: req.method,
       url: req.originalUrl,
-      userAgent: req.get('user-agent') || '',
+      userAgent: req.get("user-agent") || "",
       userId: req.user?.id ?? null,
       sessionId: req.session?.id ?? null,
       correlationId: req.correlationId,
@@ -34,7 +34,7 @@ export class LoggerInterceptor implements NestInterceptor {
     return next.handle().pipe(
       tap((data) => {
         this.logger.log({
-          message: 'response',
+          message: "response",
           method: req.method,
           url: req.originalUrl,
           status: res.statusCode,

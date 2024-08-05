@@ -1,29 +1,29 @@
-import pino from 'pino';
-import { INestApplication } from '@nestjs/common';
-import { DataSource } from 'typeorm';
+import pino from "pino";
+import { INestApplication } from "@nestjs/common";
+import { DataSource } from "typeorm";
 
 export default async (_globalConfig, _projectConfig) => {
-  const logger = pino({ level: 'error' });
+  const logger = pino({ level: "error" });
   await DatabaseCleanup(logger);
   await CognitoCleanup(logger);
   await AppCleanup(logger);
 };
 
 async function DatabaseCleanup(logger: pino.Logger) {
-  logger.info('database stopping');
+  logger.info("database stopping");
 
   const ds: DataSource = globalThis.datasource;
   for (const _m of ds.migrations) {
-    logger.trace('revert migration');
+    logger.trace("revert migration");
     await ds.undoLastMigration();
   }
   await ds.destroy();
 
-  logger.info('database stopped');
+  logger.info("database stopped");
 }
 
 async function CognitoCleanup(logger: pino.Logger) {
-  logger.info('cognito stopping');
+  logger.info("cognito stopping");
 
   const server = globalThis.cognitoServer;
   server.close();
@@ -32,7 +32,7 @@ async function CognitoCleanup(logger: pino.Logger) {
 }
 
 async function AppCleanup(logger: pino.Logger) {
-  logger.info('app stopping');
+  logger.info("app stopping");
   await (globalThis.app as INestApplication).close();
-  logger.info('app stopped');
+  logger.info("app stopped");
 }

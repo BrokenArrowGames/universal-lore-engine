@@ -1,9 +1,9 @@
-import { RoleName } from '@/module/auth/role/types';
-import { AppLogger } from '@/module/logger/logger.service';
-import { UserService } from '@/module/user/user.service';
-import { Config, INFER } from '@/util/config';
-import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { RoleName } from "@/module/auth/role/types";
+import { AppLogger } from "@/module/logger/logger.service";
+import { UserService } from "@/module/user/user.service";
+import { Config, INFER } from "@/util/config";
+import { Injectable, OnApplicationBootstrap } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class BootstrapService implements OnApplicationBootstrap {
@@ -20,13 +20,13 @@ export class BootstrapService implements OnApplicationBootstrap {
     private readonly userService: UserService,
     configService: ConfigService<Config>,
   ) {
-    this.SYS_USER_NAME = configService.getOrThrow('app.sysUser', INFER);
-    this.ROOT_USER_NAME = configService.getOrThrow('user.root.name', INFER);
-    this.ROOT_USER_PASS = configService.getOrThrow('user.root.password', INFER);
-    this.ROOT_USER_MAIL = configService.getOrThrow('user.root.email', INFER);
-    this.TEST_USER_NAME = configService.get('user.test.name', INFER);
-    this.TEST_USER_PASS = configService.get('user.test.password', INFER);
-    this.TEST_USER_MAIL = configService.get('user.test.email', INFER);
+    this.SYS_USER_NAME = configService.getOrThrow("app.sysUser", INFER);
+    this.ROOT_USER_NAME = configService.getOrThrow("user.root.name", INFER);
+    this.ROOT_USER_PASS = configService.getOrThrow("user.root.password", INFER);
+    this.ROOT_USER_MAIL = configService.getOrThrow("user.root.email", INFER);
+    this.TEST_USER_NAME = configService.get("user.test.name", INFER);
+    this.TEST_USER_PASS = configService.get("user.test.password", INFER);
+    this.TEST_USER_MAIL = configService.get("user.test.email", INFER);
   }
 
   async onApplicationBootstrap() {

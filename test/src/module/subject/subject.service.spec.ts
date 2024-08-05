@@ -1,10 +1,10 @@
-import { TestBed } from '@automock/jest';
-import { SubjectEntity } from '@db/entity/subject.entity';
-import { SubjectService } from '@mod/subject/subject.service';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { TestBed } from "@automock/jest";
+import { SubjectEntity } from "@db/entity/subject.entity";
+import { SubjectService } from "@mod/subject/subject.service";
+import { getRepositoryToken } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
 
-describe('SubjectService', () => {
+describe("SubjectService", () => {
   let service: SubjectService;
   let _subjectRepo: Repository<SubjectEntity>;
 
@@ -15,7 +15,7 @@ describe('SubjectService', () => {
     _subjectRepo = unitRef.get(getRepositoryToken(SubjectEntity) as string);
   });
 
-  it('should be defined', () => {
+  it("should be defined", () => {
     expect(service).toBeDefined();
   });
 });

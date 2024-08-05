@@ -1,8 +1,8 @@
-import { Controller, Get, Query } from '@nestjs/common';
-import { SubjectTagFilter, SubjectTagService } from './subject-tag.service';
-import { SubjectTagDto } from './subject-tag.dto';
+import { Controller, Get, Query } from "@nestjs/common";
+import { SubjectTagFilter, SubjectTagService } from "./subject-tag.service";
+import { SubjectTagDto } from "./subject-tag.dto";
 
-@Controller('subject-tag')
+@Controller("subject-tag")
 export class SubjectTagController {
   constructor(private readonly subjectTagService: SubjectTagService) {}
 

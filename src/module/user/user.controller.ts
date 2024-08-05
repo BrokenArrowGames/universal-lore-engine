@@ -10,17 +10,17 @@ import {
   Query,
   Req,
   UseGuards,
-} from '@nestjs/common';
-import { UserFilter, UserService } from './user.service';
-import { CreateUserRequest, UpdateUserRequest, UserDto } from './user.dto';
-import { AppRequest } from '@util/app-request';
-import { AuthGuard } from '@mod/auth/auth.guard';
-import { ForbiddenError, subject } from '@casl/ability';
-import { AuthAction } from '@mod/auth/util/auth-actions';
-import { AuthSubject } from '@mod/auth/util/auth-subjects';
+} from "@nestjs/common";
+import { UserFilter, UserService } from "./user.service";
+import { CreateUserRequest, UpdateUserRequest, UserDto } from "./user.dto";
+import { AppRequest } from "@util/app-request";
+import { AuthGuard } from "@mod/auth/auth.guard";
+import { ForbiddenError, subject } from "@casl/ability";
+import { AuthAction } from "@mod/auth/util/auth-actions";
+import { AuthSubject } from "@mod/auth/util/auth-subjects";
 
 // TODO: auth checks
-@Controller('user')
+@Controller("user")
 @UseGuards(AuthGuard)
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -37,10 +37,10 @@ export class UserController {
     return this.userService.createUser(req.user, body);
   }
 
-  @Get(':id')
+  @Get(":id")
   public readUser(
     @Req() req: AppRequest,
-    @Param('id', ParseIntPipe) id: number,
+    @Param("id", ParseIntPipe) id: number,
   ): Promise<UserDto> {
     ForbiddenError.from(req.user.ability).throwUnlessCan(
       AuthAction.READ,
@@ -49,10 +49,10 @@ export class UserController {
     return this.userService.getUserById(req.user, id);
   }
 
-  @Put(':id')
+  @Put(":id")
   public updateUser(
     @Req() req: AppRequest,
-    @Param('id', ParseIntPipe) id: number,
+    @Param("id", ParseIntPipe) id: number,
     @Body() body: UpdateUserRequest,
   ): Promise<UserDto> {
     ForbiddenError.from(req.user.ability).throwUnlessCan(
@@ -62,10 +62,10 @@ export class UserController {
     return this.userService.updateUser(req.user, id, body);
   }
 
-  @Delete(':id')
+  @Delete(":id")
   public deleteUser(
     @Req() req: AppRequest,
-    @Param('id', ParseIntPipe) id: number,
+    @Param("id", ParseIntPipe) id: number,
   ): Promise<void> {
     ForbiddenError.from(req.user.ability).throwUnlessCan(
       AuthAction.DELETE,
