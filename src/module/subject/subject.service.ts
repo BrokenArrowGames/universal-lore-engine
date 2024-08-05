@@ -4,7 +4,13 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository, In, QueryFailedError, EntityNotFoundError, Brackets } from "typeorm";
+import {
+  Repository,
+  In,
+  QueryFailedError,
+  EntityNotFoundError,
+  Brackets,
+} from "typeorm";
 import { FilterQuery } from "@util/filter-query";
 import {
   CreateSubjectRequest,
@@ -154,23 +160,29 @@ export class SubjectService {
     currentUser: AuthUser,
     filterQuery: SubjectFilter,
   ): Promise<SubjectDto[]> {
-    const tags = filterQuery.tags?.split(",").filter(tag => tag);
+    const tags = filterQuery.tags?.split(",").filter((tag) => tag);
     let tmpQuery = this.subjectRepo
       .createQueryBuilder("subject")
       .select("subject.id")
       .leftJoin("subject_tag_mapping", "map", "subject.id = map.subject_id")
       .leftJoin("subject.tags", "subjecttag", "subjecttag.id = map.tag_id")
-      .where(new Brackets((qb) => {
-        qb.where("subject.private = false")
-          .orWhere("subject.created_by = :self", { self: currentUser.id })
-      }));
+      .where(
+        new Brackets((qb) => {
+          qb.where("subject.private = false").orWhere(
+            "subject.created_by = :self",
+            { self: currentUser.id },
+          );
+        }),
+      );
     if (tags?.length) {
       tmpQuery = tmpQuery
-        .andWhere(new Brackets((qb) => {
-          qb.where("subject.id = map.subject_id")
-          .andWhere("subjecttag.id = map.tag_id")
-          .andWhere("subjecttag.name IN (:...tags)", { tags })
-        }))
+        .andWhere(
+          new Brackets((qb) => {
+            qb.where("subject.id = map.subject_id")
+              .andWhere("subjecttag.id = map.tag_id")
+              .andWhere("subjecttag.name IN (:...tags)", { tags });
+          }),
+        )
         .groupBy("subject.id")
         .having("COUNT(subject.id) = :tagCount", { tagCount: tags.length });
     }

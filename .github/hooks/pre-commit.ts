@@ -15,7 +15,7 @@ import { AsyncProcess } from "../../scripts/hooks/async-process";
       compiler: {
         process: new AsyncProcess({
           command: "pnpm build",
-        })
+        }),
       },
       "unit tests": {
         process: new AsyncProcess({
@@ -40,7 +40,7 @@ import { AsyncProcess } from "../../scripts/hooks/async-process";
       formatter: {
         process: new AsyncProcess({
           command: srcFiles.length
-            ? `npx prettier ${srcFiles.join(" ")}`
+            ? `npx prettier --check ${srcFiles.join(" ")}`
             : "sleep 1",
         }),
         dependsOn: ["linter"],
