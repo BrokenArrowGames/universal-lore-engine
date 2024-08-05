@@ -23,14 +23,16 @@ import { Runner } from "./runner";
         // options: { stdio: 'inherit' },
       },
       linting: {
+        condition: () => !!srcFiles.length,
         command: `npx eslint ${srcFiles.join(" ")}`,
         dependencies: ["compiling"],
         // options: { stdio: "inherit" },
       },
       formatting: {
+        condition: () => !!srcFiles.length,
         command: `npx prettier ${srcFiles.join(" ")}`,
         dependencies: ["linting"],
-        // options: { stdio: "inherit" },
+        options: { stdio: "inherit" },
       },
     });
     await runner.promise;
@@ -40,5 +42,7 @@ import { Runner } from "./runner";
     } else {
       console.error(err);
     }
+    process.exit(1);
   }
+  process.exit(9);
 })();
