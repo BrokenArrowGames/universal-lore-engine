@@ -29,8 +29,13 @@ export class AppLogger implements LoggerService {
     this.logger = pino({
       level: this.config?.get("app.log", INFER) ?? "error",
       redact: {
-        paths: ["*.auth_token", "*.password"],
-        censor: this.REDACTED,
+        paths: ["*.auth_token", "*.password", "*.long_description"],
+        censor: (value:string, path:string[]) => {
+          if (path[path.length-1] === "long_description") { 
+            return (value.length > 32) ? value.substring(0, 32-3) + "..." : value;
+          }
+          return this.REDACTED;
+        },
       },
       transport,
     });
