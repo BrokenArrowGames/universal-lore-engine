@@ -16,7 +16,7 @@ import "dotenv/config";
 
 export default async (_globalConfig, _projectConfig) => {
   const logger = pino({ level: "error" });
-  await RunMigrations(logger, { hostname: "ule-db-2" });
+  await RunMigrations(logger, { hostname: "127.0.0.1" });
   await StartCognito(logger, {
     hostname: "127.0.0.1",
     port: 9596,
