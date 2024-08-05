@@ -32,6 +32,7 @@ env:
   TEST_USER_NAME: sys_user
   TEST_USER_PASS: mysecretpassword
   TEST_USER_MAIL: user@example.com
+  TEST_DB_APP_HOST_OVERRIDE: "127.0.0.1"
   AWS_ACCESS_KEY_ID: dummy_key_id
   AWS_SECRET_ACCESS_KEY: dummy_key
 
