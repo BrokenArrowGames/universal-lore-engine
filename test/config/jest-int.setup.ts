@@ -16,7 +16,9 @@ import "dotenv/config";
 
 export default async (_globalConfig, _projectConfig) => {
   const logger = pino({ level: "error" });
-  await RunMigrations(logger, { hostname: process.env.TEST_DB_APP_HOST_OVERRIDE });
+  await RunMigrations(logger, {
+    hostname: process.env.TEST_DB_APP_HOST_OVERRIDE,
+  });
   await StartCognito(logger, {
     hostname: "127.0.0.1",
     port: 9596,

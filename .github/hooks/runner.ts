@@ -159,7 +159,10 @@ class StoppableProcess {
 export type RunnerChildOptions = Omit<
   StoppableProcessOptions,
   "label" | "dependencies"
-> & { dependencies?: string[] };
+> & {
+  dependencies?: string[],
+  condition?: () => boolean,
+};
 
 export class Runner {
   public readonly promise: Promise<void>;
@@ -183,9 +186,13 @@ export class Runner {
     animations.failure ??= ["X"];
     animations.canceled ??= ["O"];
 
-    const withoutDeps = Object.entries(childOpts).filter(
-      ([_label, opts]) => !opts.dependencies,
-    );
+    const withoutDeps = Object.entries(childOpts)
+      .filter(
+        ([_label, opts]) => !opts.condition || opts.condition(),
+      )
+      .filter(
+        ([_label, opts]) => !opts.dependencies,
+      );
     this.children.push(
       ...withoutDeps.map(
         ([label, opts]) =>
@@ -198,9 +205,12 @@ export class Runner {
     );
 
     let i = 5;
-    let withDeps = Object.entries(childOpts).filter(
-      ([_label, opts]) => opts.dependencies,
-    );
+    let withDeps = Object.entries(childOpts)
+      .filter(
+        ([_label, opts]) => !opts.condition || opts.condition(),
+      ).filter(
+        ([_label, opts]) => opts.dependencies,
+      );
     while (withDeps.length && i > 0) {
       this.children.push(
         ...withDeps
