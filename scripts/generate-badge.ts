@@ -6,22 +6,20 @@ GenBadge("version", `v${appVer}`);
 const { pct: covPct, color: covColor } = GetCoverageInfo();
 GenBadge("coverage", `${covPct}%25`, { color: covColor });
 
-
-
 interface BadgeOpts {
   color: string;
-};
+}
 
 async function GenBadge(left: string, right: string, opts?: BadgeOpts) {
   const url = `https://img.shields.io/badge/${left}-${right}-${opts?.color ?? "blue"}`;
-  const data = await fetch(url).then(res => res.text());
+  const data = await fetch(url).then((res) => res.text());
   writeFileSync(`resources/badge-${left}.svg`, data);
 }
 
 function GetColor(pct: number) {
-  if (pct > 80) return 'green';
-  if (pct > 50) return 'yellow';
-  return 'red';
+  if (pct > 80) return "green";
+  if (pct > 50) return "yellow";
+  return "red";
 }
 
 function GetCoverageInfo() {

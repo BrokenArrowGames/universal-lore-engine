@@ -57,12 +57,12 @@ export class GlobalErrorFilter implements ExceptionFilter {
     });
     this.logger.debug({
       error: exception,
-      stack: exception.stack.split(/\n    /),
+      stack: exception.stack.split(/\n {4}/),
     });
     if (exception.cause instanceof Error) {
       this.logger.debug({
         error: exception.cause,
-        stack: exception.cause?.stack?.split(/\n    /),
+        stack: exception.cause?.stack?.split(/\n {4}/),
       });
     }
     res.status(errRes.status).json(errRes);

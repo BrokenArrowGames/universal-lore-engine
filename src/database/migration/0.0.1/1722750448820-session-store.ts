@@ -19,4 +19,3 @@ export class SessionStore1722750448820 implements MigrationInterface {
     await queryRunner.query(`DROP TABLE "app"."session"`);
   }
 }
-5;
