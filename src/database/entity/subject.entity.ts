@@ -42,6 +42,7 @@ export class SubjectEntity extends AbstractEntity {
   long_description: string;
 
   @Column({ nullable: true })
+  @IsOptional()
   @MinLength(3, { message: "Subject note too short" })
   @MaxLength(Math.pow(2, 14), { message: "Subject note too long" })
   note: string;

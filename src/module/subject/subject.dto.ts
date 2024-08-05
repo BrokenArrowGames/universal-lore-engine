@@ -13,11 +13,14 @@ import {
 
 export class SubjectDto {
   id: number;
+  private: boolean;
+  key: string;
   display_name: string;
   type: SubjectType;
   tags?: SubjectTagDto[];
   short_description?: string;
   long_description?: string;
+  note?: string;
   createdBy?: UserDto;
   createdAt?: Date;
   modifiedBy?: UserDto;
@@ -25,7 +28,7 @@ export class SubjectDto {
 }
 
 export type CreateSubjectRequest = Omit<
-  UserDto,
+  SubjectDto,
   | "id"
   | "long_description"
   | "createdBy"
@@ -41,11 +44,14 @@ export type UpdateSubjectRequest = Pick<UserDto, "id"> &
 export function SubjectDtoFromEntity(entity: SubjectEntity): SubjectDto {
   return {
     id: entity.id,
+    private: entity.private,
+    key: entity.key,
     display_name: entity.display_name,
     type: entity.type,
     tags: entity.tags?.map(SubjectTagDtoFromEntity),
     short_description: entity.short_description,
     long_description: entity.long_description,
+    note: entity.note,
     createdBy: entity.createdBy
       ? UserDtoFromEntity(entity.createdBy)
       : undefined,
@@ -62,11 +68,14 @@ export function SubjectEntityFromDto(
 ): DeepPartial<SubjectEntity> {
   return {
     id: dto.id,
+    private: dto.private,
+    key: dto.key,
     display_name: dto.display_name,
     type: dto.type,
     tags: dto.tags.map(SubjectTagEntityFromDto),
     short_description: dto.short_description,
     long_description: dto.long_description,
+    note: dto.note,
     modifiedBy: dto.modifiedBy ? UserEntityFromDto(dto.modifiedBy) : undefined,
     modifiedAt: dto.modifiedAt,
   };
