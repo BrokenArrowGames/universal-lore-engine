@@ -29,6 +29,12 @@ import { AsyncProcess } from "../../scripts/hooks/async-process";
         }),
         spiesOn: ["compiler"],
       },
+      "stage badges": {
+        process: new AsyncProcess({
+          command: "git add */badge-coverage.svg */badge-version.svg",
+        }),
+        dependsOn: ["unit tests"],
+      },
       linter: {
         process: new AsyncProcess({
           command: srcFiles.length

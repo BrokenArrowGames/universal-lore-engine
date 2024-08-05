@@ -2,6 +2,6 @@
 set -e
 
 FILES=$(git diff --cached --name-only --diff-filter=ACMR | sed 's| |\\ |g')
-[ -z "$FILES" ] && exit 0
+[ -z "$FILES" ] && echo "no changes staged for commit" && exit 0
 
 npx ts-node .github/hooks/pre-commit.ts $FILES
