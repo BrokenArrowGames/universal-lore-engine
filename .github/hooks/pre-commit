@@ -1,3 +1,5 @@
 #!/bin/sh
+set -e
+
 FILES=$(git diff --cached --name-only --diff-filter=ACMR | sed 's| |\\ |g')
 npx ts-node .github/hooks/pre-commit.ts $FILES

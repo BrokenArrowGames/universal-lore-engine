@@ -29,7 +29,13 @@ enum AnsiLight {
   WHITE = "\x1b[01;37m",
 }
 
-class StoppableProcessError extends Error {
+export class RunnerError extends Error {
+  constructor(private readonly list: Error[]) {
+    super(list.map((err) => err.message).join("\n"));
+  }
+}
+
+export class StoppableProcessError extends Error {
   constructor(
     private readonly code: number,
     private readonly label: string,
@@ -39,7 +45,7 @@ class StoppableProcessError extends Error {
   }
 }
 
-class StoppableProcessDepError extends Error {
+export class StoppableProcessDepError extends Error {
   constructor(
     private readonly code: number,
     private readonly label: string,
@@ -242,7 +248,7 @@ export class Runner {
       }),
     );
 
-    this.promise = new Promise((resolve) => {
+    this.promise = new Promise((resolve, reject) => {
       let i = 0;
       const check = () => {
         this.children.forEach((child) => {
@@ -274,12 +280,13 @@ export class Runner {
         if (this.children.some(({ running, started }) => running || !started)) {
           setTimeout(check, this.interval);
         } else {
-          resolve();
           console.log(
             `${AnsiCmd.Down(this.children.length)}\r${AnsiShowCursor}`,
           );
           if (this.errors.length) {
-            console.error(this.errors.map(({ message }) => message).join("\n"));
+            reject(new RunnerError(this.errors));
+          } else {
+            resolve();
           }
         }
       };
