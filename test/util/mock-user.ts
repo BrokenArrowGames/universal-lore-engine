@@ -1,6 +1,6 @@
-import { UserEntity } from '@db/entity/user.entity';
-import { RandomDateInRange, RandomIntInRange, RandomName } from './random';
-import { DataSource, EntityManager, Repository } from 'typeorm';
+import { UserEntity } from "@db/entity/user.entity";
+import { RandomDateInRange, RandomIntInRange, RandomName } from "./random";
+import { DataSource, EntityManager, Repository } from "typeorm";
 
 export function MockDbRepo<T>(): jest.MaybeMockedDeep<Repository<T>> {
   const manager = {
@@ -59,8 +59,8 @@ export function RandomMockUser(opt?: {
 export const mockUsers: { [key: string]: UserEntity } = {
   system: {
     id: 1,
-    email: 'test@example.com',
-    name: 'name',
+    email: "test@example.com",
+    name: "name",
     createdById: 1,
     createdBy: { id: 1 } as UserEntity,
     createdAt: new Date(),

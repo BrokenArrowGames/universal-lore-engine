@@ -4,7 +4,7 @@ import {
   MaxLength,
   MinLength,
   validateSync,
-} from 'class-validator';
+} from "class-validator";
 import {
   Column,
   Entity,
@@ -18,13 +18,13 @@ import {
   DataSource,
   BeforeUpdate,
   DeleteDateColumn,
-} from 'typeorm';
-import { matchers } from './util/regex';
-import { EntityValidationError } from './util/entity-validation-error';
-import { getOrder, Order } from './util/column-order';
-import { RoleName } from '@mod/auth/role/types';
+} from "typeorm";
+import { matchers } from "./util/regex";
+import { EntityValidationError } from "./util/entity-validation-error";
+import { getOrder, Order } from "./util/column-order";
+import { RoleName } from "@mod/auth/role/types";
 
-@Entity({ schema: 'app', name: 'user' })
+@Entity({ schema: "app", name: "user" })
 export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -34,42 +34,42 @@ export class UserEntity extends BaseEntity {
   email: string;
 
   @Column({ unique: true })
-  @MinLength(3, { message: 'User name too short' })
-  @MaxLength(Math.pow(2, 14), { message: 'User name too long' })
-  @Matches(matchers.ALNUM_UNDER_DASH, { message: 'User name format invalid' })
+  @MinLength(3, { message: "User name too short" })
+  @MaxLength(Math.pow(2, 14), { message: "User name too long" })
+  @Matches(matchers.ALNUM_UNDER_DASH, { message: "User name format invalid" })
   name: string;
 
   @Column({ default: RoleName.USER })
   role: RoleName;
 
   @Order(9993)
-  @Column({ name: 'created_by', nullable: false })
+  @Column({ name: "created_by", nullable: false })
   createdById: number;
 
   @Order(9994)
   @ManyToOne(() => UserEntity)
-  @JoinColumn({ name: 'created_by' })
+  @JoinColumn({ name: "created_by" })
   createdBy: UserEntity;
 
   @Order(9995)
-  @CreateDateColumn({ name: 'created_at' })
+  @CreateDateColumn({ name: "created_at" })
   createdAt: Date;
 
   @Order(9996)
-  @Column({ name: 'modified_by', nullable: false })
+  @Column({ name: "modified_by", nullable: false })
   modifiedById: number;
 
   @Order(9997)
   @ManyToOne(() => UserEntity)
-  @JoinColumn({ name: 'modified_by' })
+  @JoinColumn({ name: "modified_by" })
   modifiedBy: UserEntity;
 
   @Order(9998)
-  @UpdateDateColumn({ name: 'modified_at' })
+  @UpdateDateColumn({ name: "modified_at" })
   modifiedAt: Date;
 
   @Order(9999)
-  @DeleteDateColumn({ name: 'deleted_at' })
+  @DeleteDateColumn({ name: "deleted_at" })
   deletedAt: Date;
 
   @BeforeInsert()

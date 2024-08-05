@@ -2,27 +2,27 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
-} from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+} from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
 import {
   Repository,
   Like,
   QueryFailedError,
   EntityNotFoundError,
-} from 'typeorm';
-import { filterProps, FilterQuery } from '@util/filter-query';
+} from "typeorm";
+import { filterProps, FilterQuery } from "@util/filter-query";
 import {
   CreateUserRequest,
   UpdateUserRequest,
   UserDto,
   UserDtoFromEntity,
-} from './user.dto';
-import { UserEntity } from '@db/entity/user.entity';
-import { AuthUser } from '../auth/auth.dto';
-import { AuthService } from '../auth/auth.service';
-import { EntityValidationError } from '@db/entity/util/entity-validation-error';
+} from "./user.dto";
+import { UserEntity } from "@db/entity/user.entity";
+import { AuthUser } from "../auth/auth.dto";
+import { AuthService } from "../auth/auth.service";
+import { EntityValidationError } from "@db/entity/util/entity-validation-error";
 
-export type UserFilter = FilterQuery<UserDto, 'name'>;
+export type UserFilter = FilterQuery<UserDto, "name">;
 
 @Injectable()
 export class UserService {
@@ -39,12 +39,12 @@ export class UserService {
     try {
       const entity = await this.userRepo.findOneOrFail({
         where: { id },
-        relations: ['createdBy', 'modifiedBy'],
+        relations: ["createdBy", "modifiedBy"],
       });
       return UserDtoFromEntity(entity);
     } catch (err) {
       if (err instanceof EntityNotFoundError) {
-        throw new NotFoundException('record not found', { cause: err });
+        throw new NotFoundException("record not found", { cause: err });
       } else {
         throw err;
       }
@@ -62,7 +62,7 @@ export class UserService {
       modifiedBy: { id: currentUser.id },
     });
     if (!reqData.password) {
-      throw new EntityValidationError(newUser, ['password required']);
+      throw new EntityValidationError(newUser, ["password required"]);
     }
 
     try {
@@ -81,9 +81,9 @@ export class UserService {
     } catch (err) {
       if (
         err instanceof QueryFailedError &&
-        err.message.includes('violates unique constraint')
+        err.message.includes("violates unique constraint")
       ) {
-        throw new ConflictException('record conflict', { cause: err });
+        throw new ConflictException("record conflict", { cause: err });
       } else {
         throw err;
       }
@@ -98,7 +98,7 @@ export class UserService {
     try {
       await this.userRepo.findOneByOrFail({ id: userId });
     } catch (err) {
-      throw new NotFoundException('record not found', { cause: err });
+      throw new NotFoundException("record not found", { cause: err });
     }
 
     const newUser = this.userRepo.create({
@@ -112,9 +112,9 @@ export class UserService {
       } catch (err) {
         if (
           err instanceof QueryFailedError &&
-          err.message.includes('violates unique constraint')
+          err.message.includes("violates unique constraint")
         ) {
-          throw new ConflictException('record conflict', { cause: err });
+          throw new ConflictException("record conflict", { cause: err });
         } else {
           throw err;
         }
@@ -145,7 +145,7 @@ export class UserService {
       });
     } catch (err) {
       if (err instanceof EntityNotFoundError) {
-        throw new NotFoundException('record not found', { cause: err });
+        throw new NotFoundException("record not found", { cause: err });
       } else {
         throw err;
       }

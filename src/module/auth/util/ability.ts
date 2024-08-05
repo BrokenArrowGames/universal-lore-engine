@@ -3,11 +3,11 @@ import {
   createMongoAbility,
   MongoAbility,
   RawRuleOf,
-} from '@casl/ability';
-import { AuthAction } from './auth-actions';
-import { AuthSubject } from './auth-subjects';
-import { AbilityUser, RoleName } from '../role/types';
-import { Roles } from '../role';
+} from "@casl/ability";
+import { AuthAction } from "./auth-actions";
+import { AuthSubject } from "./auth-subjects";
+import { AbilityUser, RoleName } from "../role/types";
+import { Roles } from "../role";
 
 export type AppAbility = MongoAbility<[AuthAction, AuthSubject]>;
 

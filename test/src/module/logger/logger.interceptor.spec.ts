@@ -1,7 +1,7 @@
-import { TestBed } from '@automock/jest';
-import { LoggerInterceptor } from '@mod/logger/logger.interceptor';
+import { TestBed } from "@automock/jest";
+import { LoggerInterceptor } from "@mod/logger/logger.interceptor";
 
-describe('LoggerInterceptor', () => {
+describe("LoggerInterceptor", () => {
   let interceptor: LoggerInterceptor;
 
   beforeEach(async () => {
@@ -10,7 +10,7 @@ describe('LoggerInterceptor', () => {
     interceptor = unit;
   });
 
-  it('should be defined', () => {
+  it("should be defined", () => {
     expect(interceptor).toBeDefined();
   });
 });

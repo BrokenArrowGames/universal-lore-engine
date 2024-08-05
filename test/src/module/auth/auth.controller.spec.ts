@@ -1,8 +1,8 @@
-import { TestBed } from '@automock/jest';
-import { AuthController } from '@mod/auth/auth.controller';
-import { AuthService } from '@mod/auth/auth.service';
+import { TestBed } from "@automock/jest";
+import { AuthController } from "@mod/auth/auth.controller";
+import { AuthService } from "@mod/auth/auth.service";
 
-describe('AuthController', () => {
+describe("AuthController", () => {
   let controller: AuthController;
   let _service: AuthService;
 
@@ -13,7 +13,7 @@ describe('AuthController', () => {
     _service = unitRef.get(AuthService);
   });
 
-  it('should be defined', () => {
+  it("should be defined", () => {
     expect(controller).toBeDefined();
   });
 });

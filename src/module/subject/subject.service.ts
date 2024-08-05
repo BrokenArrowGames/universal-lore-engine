@@ -2,25 +2,25 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
-} from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, In, QueryFailedError, EntityNotFoundError } from 'typeorm';
-import { FilterQuery } from '@util/filter-query';
+} from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository, In, QueryFailedError, EntityNotFoundError } from "typeorm";
+import { FilterQuery } from "@util/filter-query";
 import {
   CreateSubjectRequest,
   SubjectDto,
   SubjectDtoFromEntity,
   UpdateSubjectRequest,
-} from './subject.dto';
-import { SubjectEntity } from '@db/entity/subject.entity';
-import { AuthUser } from '../auth/auth.dto';
-import { ForbiddenError, subject } from '@casl/ability';
-import { AuthAction } from '../auth/util/auth-actions';
-import { AuthSubject } from '../auth/util/auth-subjects';
-import { Config, INFER } from '@/util/config';
-import { ConfigService } from '@nestjs/config';
+} from "./subject.dto";
+import { SubjectEntity } from "@db/entity/subject.entity";
+import { AuthUser } from "../auth/auth.dto";
+import { ForbiddenError, subject } from "@casl/ability";
+import { AuthAction } from "../auth/util/auth-actions";
+import { AuthSubject } from "../auth/util/auth-subjects";
+import { Config, INFER } from "@/util/config";
+import { ConfigService } from "@nestjs/config";
 
-export type SubjectFilter = FilterQuery<SubjectDto, 'display_name' | 'type'> & {
+export type SubjectFilter = FilterQuery<SubjectDto, "display_name" | "type"> & {
   tags?: string;
 };
 
@@ -33,7 +33,7 @@ export class SubjectService {
     @InjectRepository(SubjectEntity)
     private readonly subjectRepo: Repository<SubjectEntity>,
   ) {
-    this.REDACTED = this.config.getOrThrow('constants.redacted', INFER);
+    this.REDACTED = this.config.getOrThrow("constants.redacted", INFER);
   }
 
   public async getSubjectById(
@@ -43,7 +43,7 @@ export class SubjectService {
     try {
       const entity = await this.subjectRepo.findOneOrFail({
         where: { id },
-        relations: ['tags', 'createdBy', 'modifiedBy'],
+        relations: ["tags", "createdBy", "modifiedBy"],
       });
       ForbiddenError.from(currentUser.ability).throwUnlessCan(
         AuthAction.READ,
@@ -54,7 +54,7 @@ export class SubjectService {
         currentUser.ability.cannot(
           AuthAction.READ,
           subject(AuthSubject.SUBJECT, entity),
-          'note',
+          "note",
         )
       ) {
         entity.note = this.REDACTED;
@@ -62,7 +62,7 @@ export class SubjectService {
       return SubjectDtoFromEntity(entity);
     } catch (err) {
       if (err instanceof EntityNotFoundError) {
-        throw new NotFoundException('record not found', { cause: err });
+        throw new NotFoundException("record not found", { cause: err });
       } else {
         throw err;
       }
@@ -85,9 +85,9 @@ export class SubjectService {
     } catch (err) {
       if (
         err instanceof QueryFailedError &&
-        err.message.includes('violates unique constraint')
+        err.message.includes("violates unique constraint")
       ) {
-        throw new ConflictException('record conflict', { cause: err });
+        throw new ConflictException("record conflict", { cause: err });
       } else {
         throw err;
       }
@@ -102,7 +102,7 @@ export class SubjectService {
     try {
       const entity = await this.subjectRepo.findOneOrFail({
         where: { id: subjectId },
-        relations: ['createdBy'],
+        relations: ["createdBy"],
       });
       ForbiddenError.from(currentUser.ability).throwUnlessCan(
         AuthAction.UPDATE,
@@ -110,7 +110,7 @@ export class SubjectService {
       );
     } catch (err) {
       if (err instanceof EntityNotFoundError) {
-        throw new NotFoundException('record not found', { cause: err });
+        throw new NotFoundException("record not found", { cause: err });
       } else {
         throw err;
       }
@@ -143,7 +143,7 @@ export class SubjectService {
       await this.subjectRepo.softRemove([subjectEntity]);
     } catch (err) {
       if (err instanceof EntityNotFoundError) {
-        throw new NotFoundException('record not found', { cause: err });
+        throw new NotFoundException("record not found", { cause: err });
       } else {
         throw err;
       }
@@ -154,19 +154,19 @@ export class SubjectService {
     currentUser: AuthUser,
     filterQuery: SubjectFilter,
   ): Promise<SubjectDto[]> {
-    const tags = filterQuery.tags?.split(',');
+    const tags = filterQuery.tags?.split(",");
     let tmpQuery = this.subjectRepo
-      .createQueryBuilder('subject')
-      .select('subject.id')
-      .leftJoin('subject_tag_mapping', 'map', 'subject.id = map.subject_id')
-      .leftJoin('subject.tags', 'subjecttag', 'subjecttag.id = map.tag_id');
+      .createQueryBuilder("subject")
+      .select("subject.id")
+      .leftJoin("subject_tag_mapping", "map", "subject.id = map.subject_id")
+      .leftJoin("subject.tags", "subjecttag", "subjecttag.id = map.tag_id");
     if (tags?.length) {
       tmpQuery = tmpQuery
-        .where('subject.id = map.subject_id')
-        .andWhere('subjecttag.id = map.tag_id')
-        .andWhere('subjecttag.name IN (:...tags)', { tags })
-        .groupBy('subject.id')
-        .having('COUNT(subject.id) = :tagCount', { tagCount: tags.length });
+        .where("subject.id = map.subject_id")
+        .andWhere("subjecttag.id = map.tag_id")
+        .andWhere("subjecttag.name IN (:...tags)", { tags })
+        .groupBy("subject.id")
+        .having("COUNT(subject.id) = :tagCount", { tagCount: tags.length });
     }
 
     const tmpEntities = (await tmpQuery.getMany()) as SubjectEntity[];
@@ -179,7 +179,7 @@ export class SubjectService {
         short_description: true,
       },
       where: { id: In(tmpEntities.map(({ id }) => id)) },
-      relations: ['tags'],
+      relations: ["tags"],
     });
     return (
       entities

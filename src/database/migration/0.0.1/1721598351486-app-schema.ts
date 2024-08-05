@@ -1,7 +1,7 @@
-import { MigrationInterface, QueryRunner } from 'typeorm';
+import { MigrationInterface, QueryRunner } from "typeorm";
 
 export class AppSchema1721598351486 implements MigrationInterface {
-  name = 'AppSchema1721598351486';
+  name = "AppSchema1721598351486";
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createSchema(`app`);

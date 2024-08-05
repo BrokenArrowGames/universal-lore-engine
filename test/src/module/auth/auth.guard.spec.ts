@@ -1,7 +1,7 @@
-import { TestBed } from '@automock/jest';
-import { AuthGuard } from '@mod/auth/auth.guard';
+import { TestBed } from "@automock/jest";
+import { AuthGuard } from "@mod/auth/auth.guard";
 
-describe('AuthGuard', () => {
+describe("AuthGuard", () => {
   let service: AuthGuard;
 
   beforeEach(async () => {
@@ -10,7 +10,7 @@ describe('AuthGuard', () => {
     service = unit;
   });
 
-  it('should be defined', () => {
+  it("should be defined", () => {
     expect(service).toBeDefined();
   });
 });

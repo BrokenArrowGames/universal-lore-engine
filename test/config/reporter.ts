@@ -6,7 +6,7 @@ import {
   Test,
   TestContext,
   TestResult,
-} from '@jest/reporters';
+} from "@jest/reporters";
 
 export default class JestReporter implements Reporter {
   constructor(
@@ -37,10 +37,10 @@ export default class JestReporter implements Reporter {
         results.testResults
           .filter((tst) => tst.failureMessage)
           .map((tst) => tst.failureMessage)
-          .join('\n'),
+          .join("\n"),
       );
-      console.log('failed suites', results.numFailedTestSuites);
-      console.log('failed tests', results.numFailedTests);
+      console.log("failed suites", results.numFailedTestSuites);
+      console.log("failed tests", results.numFailedTests);
     }
   }
 }

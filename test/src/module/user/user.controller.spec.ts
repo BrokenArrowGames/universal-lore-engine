@@ -1,14 +1,14 @@
-import { TestBed } from '@automock/jest';
-import { createMongoAbility, ForbiddenError } from '@casl/ability';
-import { AppAbility } from '@mod/auth/util/ability';
-import { AuthAction } from '@mod/auth/util/auth-actions';
-import { AuthSubject } from '@mod/auth/util/auth-subjects';
-import { UserController } from '@mod/user/user.controller';
-import { CreateUserRequest, UpdateUserRequest } from '@mod/user/user.dto';
-import { UserService } from '@mod/user/user.service';
-import { AppRequest } from '@util/app-request';
+import { TestBed } from "@automock/jest";
+import { createMongoAbility, ForbiddenError } from "@casl/ability";
+import { AppAbility } from "@mod/auth/util/ability";
+import { AuthAction } from "@mod/auth/util/auth-actions";
+import { AuthSubject } from "@mod/auth/util/auth-subjects";
+import { UserController } from "@mod/user/user.controller";
+import { CreateUserRequest, UpdateUserRequest } from "@mod/user/user.dto";
+import { UserService } from "@mod/user/user.service";
+import { AppRequest } from "@util/app-request";
 
-describe('UserController', () => {
+describe("UserController", () => {
   let controller: UserController;
   let service: UserService;
 
@@ -19,12 +19,12 @@ describe('UserController', () => {
     service = unitRef.get(UserService);
   });
 
-  it('should be defined', () => {
+  it("should be defined", () => {
     expect(controller).toBeDefined();
   });
 
-  describe('createUser', () => {
-    it('should throw ForbiddenError when auth fails', () => {
+  describe("createUser", () => {
+    it("should throw ForbiddenError when auth fails", () => {
       const ability = createMongoAbility();
       return expect(() =>
         controller.createUser(
@@ -34,8 +34,8 @@ describe('UserController', () => {
       ).toThrow(`Cannot execute "CREATE" on "USER"`);
     });
 
-    it('should perform basic auth check', async () => {
-      const errorSpy = jest.spyOn(ForbiddenError, 'from');
+    it("should perform basic auth check", async () => {
+      const errorSpy = jest.spyOn(ForbiddenError, "from");
       const ability = createMongoAbility<AppAbility>([
         { action: AuthAction.CREATE, subject: AuthSubject.USER },
       ]);
@@ -46,7 +46,7 @@ describe('UserController', () => {
       return expect(errorSpy).toHaveBeenCalled();
     });
 
-    it('calls user service', async () => {
+    it("calls user service", async () => {
       const ability = createMongoAbility<AppAbility>([
         { action: AuthAction.CREATE, subject: AuthSubject.USER },
       ]);
@@ -58,16 +58,16 @@ describe('UserController', () => {
     });
   });
 
-  describe('readUser', () => {
-    it('should throw ForbiddenError when auth fails', () => {
+  describe("readUser", () => {
+    it("should throw ForbiddenError when auth fails", () => {
       const ability = createMongoAbility();
       return expect(() =>
         controller.readUser({ user: { ability } } as unknown as AppRequest, 0),
       ).toThrow(`Cannot execute "READ" on "USER"`);
     });
 
-    it('should perform basic auth check', async () => {
-      const errorSpy = jest.spyOn(ForbiddenError, 'from');
+    it("should perform basic auth check", async () => {
+      const errorSpy = jest.spyOn(ForbiddenError, "from");
       const ability = createMongoAbility<AppAbility>([
         { action: AuthAction.READ, subject: AuthSubject.USER },
       ]);
@@ -78,7 +78,7 @@ describe('UserController', () => {
       return expect(errorSpy).toHaveBeenCalled();
     });
 
-    it('calls user service', async () => {
+    it("calls user service", async () => {
       const ability = createMongoAbility<AppAbility>([
         { action: AuthAction.READ, subject: AuthSubject.USER },
       ]);
@@ -90,8 +90,8 @@ describe('UserController', () => {
     });
   });
 
-  describe('updateUser', () => {
-    it('should throw ForbiddenError when auth fails', () => {
+  describe("updateUser", () => {
+    it("should throw ForbiddenError when auth fails", () => {
       const ability = createMongoAbility();
       return expect(() =>
         controller.updateUser(
@@ -102,8 +102,8 @@ describe('UserController', () => {
       ).toThrow(`Cannot execute "UPDATE" on "USER"`);
     });
 
-    it('should perform basic auth check', async () => {
-      const errorSpy = jest.spyOn(ForbiddenError, 'from');
+    it("should perform basic auth check", async () => {
+      const errorSpy = jest.spyOn(ForbiddenError, "from");
       const ability = createMongoAbility<AppAbility>([
         { action: AuthAction.UPDATE, subject: AuthSubject.USER },
       ]);
@@ -115,7 +115,7 @@ describe('UserController', () => {
       return expect(errorSpy).toHaveBeenCalled();
     });
 
-    it('calls user service', async () => {
+    it("calls user service", async () => {
       const ability = createMongoAbility<AppAbility>([
         { action: AuthAction.UPDATE, subject: AuthSubject.USER },
       ]);
@@ -128,8 +128,8 @@ describe('UserController', () => {
     });
   });
 
-  describe('deleteUser', () => {
-    it('should throw ForbiddenError when auth fails', () => {
+  describe("deleteUser", () => {
+    it("should throw ForbiddenError when auth fails", () => {
       const ability = createMongoAbility();
       return expect(() =>
         controller.deleteUser(
@@ -139,8 +139,8 @@ describe('UserController', () => {
       ).toThrow(`Cannot execute "DELETE" on "USER"`);
     });
 
-    it('should perform basic auth check', async () => {
-      const errorSpy = jest.spyOn(ForbiddenError, 'from');
+    it("should perform basic auth check", async () => {
+      const errorSpy = jest.spyOn(ForbiddenError, "from");
       const ability = createMongoAbility<AppAbility>([
         { action: AuthAction.DELETE, subject: AuthSubject.USER },
       ]);
@@ -151,7 +151,7 @@ describe('UserController', () => {
       return expect(errorSpy).toHaveBeenCalled();
     });
 
-    it('calls user service', async () => {
+    it("calls user service", async () => {
       const ability = createMongoAbility<AppAbility>([
         { action: AuthAction.DELETE, subject: AuthSubject.USER },
       ]);
@@ -163,8 +163,8 @@ describe('UserController', () => {
     });
   });
 
-  describe('getFilteredUsers', () => {
-    it('should throw ForbiddenError when auth fails', () => {
+  describe("getFilteredUsers", () => {
+    it("should throw ForbiddenError when auth fails", () => {
       const ability = createMongoAbility();
       return expect(() =>
         controller.listUsers(
@@ -174,8 +174,8 @@ describe('UserController', () => {
       ).toThrow(`Cannot execute "LIST" on "USER"`);
     });
 
-    it('should perform basic auth check', async () => {
-      const errorSpy = jest.spyOn(ForbiddenError, 'from');
+    it("should perform basic auth check", async () => {
+      const errorSpy = jest.spyOn(ForbiddenError, "from");
       const ability = createMongoAbility<AppAbility>([
         { action: AuthAction.LIST, subject: AuthSubject.USER },
       ]);
@@ -186,7 +186,7 @@ describe('UserController', () => {
       return expect(errorSpy).toHaveBeenCalled();
     });
 
-    it('calls user service', async () => {
+    it("calls user service", async () => {
       const ability = createMongoAbility<AppAbility>([
         { action: AuthAction.LIST, subject: AuthSubject.USER },
       ]);

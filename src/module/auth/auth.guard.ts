@@ -3,15 +3,15 @@ import {
   ExecutionContext,
   Injectable,
   UnauthorizedException,
-} from '@nestjs/common';
-import { AppRequest } from '@util/app-request';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Observable } from 'rxjs';
-import { UserEntity } from '@db/entity/user.entity';
-import { AppLogger } from '@mod/logger/logger.service';
-import { createAbility } from './util/ability';
-import { RoleName } from './role/types';
+} from "@nestjs/common";
+import { AppRequest } from "@util/app-request";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { Observable } from "rxjs";
+import { UserEntity } from "@db/entity/user.entity";
+import { AppLogger } from "@mod/logger/logger.service";
+import { createAbility } from "./util/ability";
+import { RoleName } from "./role/types";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -51,13 +51,13 @@ export class AuthGuard implements CanActivate {
     }
 
     const metadata = Reflect.getMetadata(
-      'Controller:AllowGuestSession',
+      "Controller:AllowGuestSession",
       clazz.prototype[handler.name],
     );
     if (metadata === true) {
       req.user = {
         id: 0,
-        name: 'guest',
+        name: "guest",
         role: RoleName.GUEST,
         ability: createAbility({ id: 0, role: RoleName.GUEST }),
       };
@@ -66,10 +66,10 @@ export class AuthGuard implements CanActivate {
     }
 
     this.logger.log({
-      message: 'request',
+      message: "request",
       method: req.method,
       url: req.originalUrl,
-      userAgent: req.get('user-agent') || '',
+      userAgent: req.get("user-agent") || "",
       userId: req.user?.id ?? null,
       sessionId: req.session?.id ?? null,
       correlationId: req.correlationId,

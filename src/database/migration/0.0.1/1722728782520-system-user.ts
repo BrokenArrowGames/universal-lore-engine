@@ -1,13 +1,13 @@
-import { Config, LoadConfig } from '@/util/config';
-import { MigrationInterface, QueryRunner } from 'typeorm';
+import { Config, LoadConfig } from "@/util/config";
+import { MigrationInterface, QueryRunner } from "typeorm";
 
 export class SystemUser1722728782520 implements MigrationInterface {
-  name = 'InitialTables1722728782520';
+  name = "InitialTables1722728782520";
   config: Config = LoadConfig();
 
   public async createSystemUser(queryRunner: QueryRunner, sysUserName: string) {
     if (!sysUserName) {
-      throw Error('missing system user name');
+      throw Error("missing system user name");
     }
     await queryRunner.query(
       `INSERT INTO "app"."user" (name, email, role) VALUES ('${sysUserName}', '${sysUserName}@localhost', 'ADMIN')`,

@@ -1,19 +1,19 @@
-import { DeepPartial } from 'typeorm';
-import { UserEntity } from '@db/entity/user.entity';
-import { RoleName } from '../auth/role/types';
+import { DeepPartial } from "typeorm";
+import { UserEntity } from "@db/entity/user.entity";
+import { RoleName } from "../auth/role/types";
 
 export class UserDto {
   id: number;
   name: string;
 }
 
-export type CreateUserRequest = Omit<UserDto, 'id'> & {
+export type CreateUserRequest = Omit<UserDto, "id"> & {
   password: string;
   email: string;
   role?: RoleName;
 };
 
-export type UpdateUserRequest = Pick<UserDto, 'id'> &
+export type UpdateUserRequest = Pick<UserDto, "id"> &
   Partial<CreateUserRequest>;
 
 export function UserDtoFromEntity(entity: UserEntity): UserDto {

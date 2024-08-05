@@ -10,22 +10,22 @@ import {
   Query,
   Req,
   UseGuards,
-} from '@nestjs/common';
-import { SubjectFilter, SubjectService } from './subject.service';
+} from "@nestjs/common";
+import { SubjectFilter, SubjectService } from "./subject.service";
 import {
   CreateSubjectRequest,
   SubjectDto,
   UpdateSubjectRequest,
-} from './subject.dto';
-import { AppRequest } from '@util/app-request';
-import { AuthGuard } from '@mod/auth/auth.guard';
-import { ForbiddenError } from '@casl/ability';
-import { AuthAction } from '@mod/auth/util/auth-actions';
-import { AuthSubject } from '@mod/auth/util/auth-subjects';
-import { AllowGuestSession } from '@mod/auth/decorator/allow-guest-session';
+} from "./subject.dto";
+import { AppRequest } from "@util/app-request";
+import { AuthGuard } from "@mod/auth/auth.guard";
+import { ForbiddenError } from "@casl/ability";
+import { AuthAction } from "@mod/auth/util/auth-actions";
+import { AuthSubject } from "@mod/auth/util/auth-subjects";
+import { AllowGuestSession } from "@mod/auth/decorator/allow-guest-session";
 
 // TODO: auth checks
-@Controller('subject')
+@Controller("subject")
 @UseGuards(AuthGuard)
 export class SubjectController {
   constructor(private readonly subjectService: SubjectService) {}
@@ -42,11 +42,11 @@ export class SubjectController {
     return this.subjectService.createSubject(req.user, body);
   }
 
-  @Get(':id')
+  @Get(":id")
   @AllowGuestSession()
   public readSubject(
     @Req() req: AppRequest,
-    @Param('id', ParseIntPipe) id: number,
+    @Param("id", ParseIntPipe) id: number,
   ): Promise<SubjectDto> {
     ForbiddenError.from(req.user.ability).throwUnlessCan(
       AuthAction.READ,
@@ -55,10 +55,10 @@ export class SubjectController {
     return this.subjectService.getSubjectById(req.user, id);
   }
 
-  @Put(':id')
+  @Put(":id")
   public updateSubject(
     @Req() req: AppRequest,
-    @Param('id', ParseIntPipe) id: number,
+    @Param("id", ParseIntPipe) id: number,
     @Body() body: UpdateSubjectRequest,
   ): Promise<SubjectDto> {
     ForbiddenError.from(req.user.ability).throwUnlessCan(
@@ -68,10 +68,10 @@ export class SubjectController {
     return this.subjectService.updateSubject(req.user, id, body);
   }
 
-  @Delete(':id')
+  @Delete(":id")
   public deleteSubject(
     @Req() req: AppRequest,
-    @Param('id', ParseIntPipe) id: number,
+    @Param("id", ParseIntPipe) id: number,
   ): Promise<void> {
     ForbiddenError.from(req.user.ability).throwUnlessCan(
       AuthAction.DELETE,

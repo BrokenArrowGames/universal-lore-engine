@@ -1,7 +1,7 @@
-import { BootstrapService } from '../../../../src/bootstrap/bootstrap.service';
-import { TestBed } from '@automock/jest';
+import { BootstrapService } from "../../../../src/bootstrap/bootstrap.service";
+import { TestBed } from "@automock/jest";
 
-describe('BootstrapService', () => {
+describe("BootstrapService", () => {
   let service: BootstrapService;
 
   beforeEach(async () => {
@@ -10,7 +10,7 @@ describe('BootstrapService', () => {
     service = unit;
   });
 
-  it('should be defined', () => {
+  it("should be defined", () => {
     expect(service).toBeDefined();
   });
 });

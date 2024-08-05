@@ -1,6 +1,6 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { Config, INFER } from '@util/config';
+import { BadRequestException, Inject, Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { Config, INFER } from "@util/config";
 import {
   AdminCreateUserCommand,
   AdminDeleteUserCommand,
@@ -13,9 +13,9 @@ import {
   ResourceNotFoundException,
   UsernameExistsException,
   UserNotFoundException,
-} from '@aws-sdk/client-cognito-identity-provider';
-import { LoginRequest } from './auth.dto';
-import { CognitoClientProviderToken } from '@mod/aws/cognito.provider';
+} from "@aws-sdk/client-cognito-identity-provider";
+import { LoginRequest } from "./auth.dto";
+import { CognitoClientProviderToken } from "@mod/aws/cognito.provider";
 
 @Injectable()
 export class AuthService {
@@ -27,15 +27,15 @@ export class AuthService {
     @Inject(CognitoClientProviderToken)
     private readonly client: CognitoIdentityProviderClient,
   ) {
-    this.poolId = this.config.getOrThrow('aws.cognito.pool', INFER);
-    this.clientId = this.config.getOrThrow('aws.cognito.client', INFER);
+    this.poolId = this.config.getOrThrow("aws.cognito.pool", INFER);
+    this.clientId = this.config.getOrThrow("aws.cognito.client", INFER);
   }
 
   public async login(reqData: LoginRequest): Promise<string> {
     const cmd = new AdminInitiateAuthCommand({
       UserPoolId: this.poolId,
       ClientId: this.clientId,
-      AuthFlow: 'ADMIN_USER_PASSWORD_AUTH',
+      AuthFlow: "ADMIN_USER_PASSWORD_AUTH",
       AuthParameters: {
         USERNAME: reqData.username,
         PASSWORD: reqData.password,
@@ -52,7 +52,7 @@ export class AuthService {
         err instanceof ResourceNotFoundException ||
         err instanceof UserNotFoundException
       ) {
-        throw new BadRequestException('Invalid username or password', {
+        throw new BadRequestException("Invalid username or password", {
           cause: err,
         });
       } else {
@@ -70,10 +70,10 @@ export class AuthService {
       const createCmd = new AdminCreateUserCommand({
         UserPoolId: this.poolId,
         Username: username,
-        DesiredDeliveryMediums: ['EMAIL'],
+        DesiredDeliveryMediums: ["EMAIL"],
         UserAttributes: [
-          { Name: 'email', Value: email },
-          { Name: 'email_verified', Value: 'True' },
+          { Name: "email", Value: email },
+          { Name: "email_verified", Value: "True" },
         ],
       });
       const result = await this.client.send(createCmd);
@@ -81,7 +81,7 @@ export class AuthService {
       return result.User.Username;
     } catch (err) {
       if (err instanceof UsernameExistsException) {
-        throw new BadRequestException('Invalid username', { cause: err });
+        throw new BadRequestException("Invalid username", { cause: err });
       } else {
         throw err;
       }
@@ -111,8 +111,8 @@ export class AuthService {
       UserPoolId: this.poolId,
       Username: username,
       UserAttributes: [
-        { Name: 'email', Value: email },
-        { Name: 'email_verified', Value: 'True' },
+        { Name: "email", Value: email },
+        { Name: "email_verified", Value: "True" },
       ],
     });
     await this.client.send(cmd);

@@ -1,14 +1,14 @@
-import { Body, Controller, HttpCode, Post, Req } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { LoginRequest } from './auth.dto';
-import { AppRequest } from '@util/app-request';
+import { Body, Controller, HttpCode, Post, Req } from "@nestjs/common";
+import { AuthService } from "./auth.service";
+import { LoginRequest } from "./auth.dto";
+import { AppRequest } from "@util/app-request";
 
 // TODO: auth checks
-@Controller('auth')
+@Controller("auth")
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('login')
+  @Post("login")
   @HttpCode(200)
   public async login(
     @Req() req: AppRequest,
@@ -19,7 +19,7 @@ export class AuthController {
     req.session.token = token;
   }
 
-  @Post('logout')
+  @Post("logout")
   public logout(@Req() req: AppRequest): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       if (!req.session) {

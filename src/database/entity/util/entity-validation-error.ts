@@ -1,6 +1,6 @@
-import { ValidationError } from 'class-validator';
-import { BaseEntity } from 'typeorm';
-import { AppError } from '../../../error/app-error';
+import { ValidationError } from "class-validator";
+import { BaseEntity } from "typeorm";
+import { AppError } from "../../../error/app-error";
 
 export class EntityValidationError extends AppError {
   constructor(
@@ -10,7 +10,7 @@ export class EntityValidationError extends AppError {
   ) {
     super(
       403,
-      'invalid record',
+      "invalid record",
       errors.flatMap((err) =>
         err instanceof ValidationError ? Object.values(err.constraints) : err,
       ),

@@ -3,17 +3,17 @@ import {
   Catch,
   ArgumentsHost,
   HttpException,
-} from '@nestjs/common';
-import { AppRequest, ErrorResponse } from '@util/app-request';
-import { AppLogger } from '@mod/logger/logger.service';
-import { AppError } from './app-error';
-import { ForbiddenError } from '@casl/ability';
-import { Response } from 'express';
+} from "@nestjs/common";
+import { AppRequest, ErrorResponse } from "@util/app-request";
+import { AppLogger } from "@mod/logger/logger.service";
+import { AppError } from "./app-error";
+import { ForbiddenError } from "@casl/ability";
+import { Response } from "express";
 
 @Catch(Error)
 export class GlobalErrorFilter implements ExceptionFilter {
   constructor(private readonly logger: AppLogger) {
-    this.logger.setContext('GlobalErrorFilter');
+    this.logger.setContext("GlobalErrorFilter");
   }
 
   public catch(exception: Error, host: ArgumentsHost) {
@@ -23,11 +23,11 @@ export class GlobalErrorFilter implements ExceptionFilter {
 
     const errRes: ErrorResponse = {
       status: 500,
-      type: 'InternalServerErrorException',
-      message: 'an unknown error has occured',
+      type: "InternalServerErrorException",
+      message: "an unknown error has occured",
     };
 
-    let cause = '';
+    let cause = "";
     if (exception instanceof AppError) {
       errRes.status = exception.status;
       errRes.type = exception.name;

@@ -1,8 +1,8 @@
-import { Module } from '@nestjs/common';
+import { Module } from "@nestjs/common";
 import {
   CognitoClientProvider,
   CognitoClientProviderToken,
-} from './cognito.provider';
+} from "./cognito.provider";
 
 @Module({
   providers: [CognitoClientProvider],

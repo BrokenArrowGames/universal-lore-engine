@@ -1,10 +1,10 @@
-import { ConfigGetOptions } from '@nestjs/config';
-import { Level } from 'pino';
+import { ConfigGetOptions } from "@nestjs/config";
+import { Level } from "pino";
 
 export enum AppEnv {
-  LOCAL = 'LOCAL',
-  DEV = 'DEV',
-  PROD = 'PROD',
+  LOCAL = "LOCAL",
+  DEV = "DEV",
+  PROD = "PROD",
 }
 
 export type Config = {
@@ -59,17 +59,17 @@ export const LoadConfig = (): Config => ({
     local: process.env.APP_ENV === AppEnv.LOCAL,
     env: process.env.APP_ENV as AppEnv,
     port: +(process.env.APP_PORT ?? 3000),
-    log: (process.env.APP_LOG_LEVEL as Level) ?? 'info',
-    sysUser: 'system',
+    log: (process.env.APP_LOG_LEVEL as Level) ?? "info",
+    sysUser: "system",
   },
   user: {
     root: {
-      name: process.env.ROOT_USER_NAME ?? 'sys_admin',
+      name: process.env.ROOT_USER_NAME ?? "sys_admin",
       password: process.env.ROOT_USER_PASS,
       email: process.env.ROOT_USER_MAIL,
     },
     test: {
-      name: process.env.TEST_USER_NAME ?? 'sys_tst_user',
+      name: process.env.TEST_USER_NAME ?? "sys_tst_user",
       password: process.env.TEST_USER_PASS,
       email: process.env.TEST_USER_MAIL,
     },
@@ -83,7 +83,7 @@ export const LoadConfig = (): Config => ({
     schema: process.env.DB_APP_SCHEMA,
   },
   aws: {
-    region: 'us-east-1',
+    region: "us-east-1",
     cognito: {
       endpoint: process.env.COGNITO_ENDPOINT,
       pool: process.env.COGNITO_POOL_ID,
@@ -97,7 +97,7 @@ export const LoadConfig = (): Config => ({
     },
   },
   constants: {
-    redacted: '[REDACTED]',
+    redacted: "[REDACTED]",
   },
 });
 

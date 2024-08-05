@@ -1,7 +1,7 @@
-import { TestBed } from '@automock/jest';
-import { UserModule } from '@mod/user/user.module';
+import { TestBed } from "@automock/jest";
+import { UserModule } from "@mod/user/user.module";
 
-describe('UserModule', () => {
+describe("UserModule", () => {
   let module: UserModule;
 
   beforeEach(async () => {
@@ -10,7 +10,7 @@ describe('UserModule', () => {
     module = unit;
   });
 
-  it('should be defined', () => {
+  it("should be defined", () => {
     expect(module).toBeDefined();
   });
 });
