@@ -32,7 +32,7 @@ import { Runner } from "./runner";
         condition: () => !!srcFiles.length,
         command: `npx prettier ${srcFiles.join(" ")}`,
         dependencies: ["linting"],
-        options: { stdio: "inherit" },
+        // options: { stdio: "inherit" },
       },
     });
     await runner.promise;
