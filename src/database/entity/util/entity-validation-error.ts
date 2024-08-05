@@ -9,7 +9,7 @@ export class EntityValidationError extends AppError {
     cause?: Error,
   ) {
     super(
-      403,
+      400,
       "invalid record",
       errors.flatMap((err) =>
         err instanceof ValidationError ? Object.values(err.constraints) : err,
