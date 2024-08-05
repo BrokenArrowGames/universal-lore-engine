@@ -1,4 +1,8 @@
-import { AsyncProcess, AsyncProcessStatus, AsyncProcessWasKilledError } from "./async-process";
+import {
+  AsyncProcess,
+  AsyncProcessStatus,
+  AsyncProcessWasKilledError,
+} from "./async-process";
 import {
   AnsiClearLine,
   AnsiNorm,
@@ -11,7 +15,13 @@ export class AsyncProcessRunner {
   private frame: number = 0;
   private readonly results: Record<
     string,
-    { done: boolean; hasErr: boolean; err?: Error; stderr?: string; promise?: Promise<void> }
+    {
+      done: boolean;
+      hasErr: boolean;
+      err?: Error;
+      stderr?: string;
+      promise?: Promise<void>;
+    }
   > = {};
 
   constructor(
@@ -142,7 +152,7 @@ export class AsyncProcessRunner {
         .catch((err) => {
           result.hasErr = true;
           result.err = err;
-          result.stderr = child.process.stdErr
+          result.stderr = child.process.stdErr;
         })
         .finally(() => (result.done = true));
     });

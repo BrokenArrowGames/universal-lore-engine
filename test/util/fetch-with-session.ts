@@ -1,6 +1,6 @@
 export type SessionFetchFn = (
   url: string,
-  options?: Omit<RequestInit, "body"> & { body?: Buffer|string|object },
+  options?: Omit<RequestInit, "body"> & { body?: Buffer | string | object },
 ) => Promise<{ status: number; headers: object; body: string }>;
 
 export async function StartSession(
@@ -18,12 +18,18 @@ export async function StartSession(
   const cookie = res.headers.get("Set-Cookie");
   const correlationId = res.headers.get("App-Correlation-Id");
 
-  return async (url: string, options?: Omit<RequestInit, "body"> & { body?: Buffer|string|object }) => {
-    let body: Buffer|undefined = undefined;
+  return async (
+    url: string,
+    options?: Omit<RequestInit, "body"> & { body?: Buffer | string | object },
+  ) => {
+    let body: Buffer | undefined = undefined;
     if (options?.body) {
-      body = options.body instanceof Buffer ? options.body
-        : typeof options.body === "string" ? Buffer.from(options.body)
-        : Buffer.from(JSON.stringify(options.body));
+      body =
+        options.body instanceof Buffer
+          ? options.body
+          : typeof options.body === "string"
+            ? Buffer.from(options.body)
+            : Buffer.from(JSON.stringify(options.body));
       delete options.body;
     }
 

@@ -60,7 +60,7 @@ export class UserService {
     if (reqData.role === RoleName.GUEST) {
       throw new BadRequestException("cannot create guest user");
     }
-    
+
     // TODO: ensure you have permission to give the selected role
     const newUser = this.userRepo.create({
       ...reqData,
