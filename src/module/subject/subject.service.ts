@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository, In, QueryFailedError, EntityNotFoundError } from "typeorm";
+import { Repository, In, QueryFailedError, EntityNotFoundError, Brackets } from "typeorm";
 import { FilterQuery } from "@util/filter-query";
 import {
   CreateSubjectRequest,
@@ -36,6 +36,31 @@ export class SubjectService {
     this.REDACTED = this.config.getOrThrow("constants.redacted", INFER);
   }
 
+  public async createSubject(
+    currentUser: AuthUser,
+    reqData: CreateSubjectRequest,
+  ): Promise<SubjectDto> {
+    const newSubject = this.subjectRepo.create({
+      ...reqData,
+      createdBy: { id: currentUser.id },
+      modifiedBy: { id: currentUser.id },
+    });
+
+    try {
+      const result = await this.subjectRepo.save(newSubject);
+      return SubjectDtoFromEntity(result);
+    } catch (err) {
+      if (
+        err instanceof QueryFailedError &&
+        err.message.includes("violates unique constraint")
+      ) {
+        throw new ConflictException("record conflict", { cause: err });
+      } else {
+        throw err;
+      }
+    }
+  }
+
   public async getSubjectById(
     currentUser: AuthUser,
     id: number,
@@ -63,31 +88,6 @@ export class SubjectService {
     } catch (err) {
       if (err instanceof EntityNotFoundError) {
         throw new NotFoundException("record not found", { cause: err });
-      } else {
-        throw err;
-      }
-    }
-  }
-
-  public async createSubject(
-    currentUser: AuthUser,
-    reqData: CreateSubjectRequest,
-  ): Promise<SubjectDto> {
-    const newSubject = this.subjectRepo.create({
-      ...reqData,
-      createdBy: { id: currentUser.id },
-      modifiedBy: { id: currentUser.id },
-    });
-
-    try {
-      const result = await this.subjectRepo.save(newSubject);
-      return SubjectDtoFromEntity(result);
-    } catch (err) {
-      if (
-        err instanceof QueryFailedError &&
-        err.message.includes("violates unique constraint")
-      ) {
-        throw new ConflictException("record conflict", { cause: err });
       } else {
         throw err;
       }
@@ -154,17 +154,23 @@ export class SubjectService {
     currentUser: AuthUser,
     filterQuery: SubjectFilter,
   ): Promise<SubjectDto[]> {
-    const tags = filterQuery.tags?.split(",");
+    const tags = filterQuery.tags?.split(",").filter(tag => tag);
     let tmpQuery = this.subjectRepo
       .createQueryBuilder("subject")
       .select("subject.id")
       .leftJoin("subject_tag_mapping", "map", "subject.id = map.subject_id")
-      .leftJoin("subject.tags", "subjecttag", "subjecttag.id = map.tag_id");
+      .leftJoin("subject.tags", "subjecttag", "subjecttag.id = map.tag_id")
+      .where(new Brackets((qb) => {
+        qb.where("subject.private = false")
+          .orWhere("subject.created_by = :self", { self: currentUser.id })
+      }));
     if (tags?.length) {
       tmpQuery = tmpQuery
-        .where("subject.id = map.subject_id")
-        .andWhere("subjecttag.id = map.tag_id")
-        .andWhere("subjecttag.name IN (:...tags)", { tags })
+        .andWhere(new Brackets((qb) => {
+          qb.where("subject.id = map.subject_id")
+          .andWhere("subjecttag.id = map.tag_id")
+          .andWhere("subjecttag.name IN (:...tags)", { tags })
+        }))
         .groupBy("subject.id")
         .having("COUNT(subject.id) = :tagCount", { tagCount: tags.length });
     }
@@ -173,6 +179,7 @@ export class SubjectService {
     const entities = await this.subjectRepo.find({
       select: {
         id: true,
+        private: true,
         display_name: true,
         type: true,
         tags: true,
@@ -187,7 +194,7 @@ export class SubjectService {
         // TODO: write test for this
         .map((dto) => {
           if (
-            currentUser.ability.cannot(
+            !currentUser.ability.can(
               AuthAction.READ,
               subject(AuthSubject.SUBJECT, dto),
             )
@@ -196,7 +203,7 @@ export class SubjectService {
               id: dto.id,
               type: dto.type,
               display_name: this.REDACTED,
-              tags: [{ id: -1, name: this.REDACTED }],
+              tags: [],
             } as SubjectDto;
           } else {
             return dto;

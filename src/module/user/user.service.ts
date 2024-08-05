@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
@@ -21,6 +22,7 @@ import { UserEntity } from "@db/entity/user.entity";
 import { AuthUser } from "../auth/auth.dto";
 import { AuthService } from "../auth/auth.service";
 import { EntityValidationError } from "@db/entity/util/entity-validation-error";
+import { RoleName } from "../auth/role/types";
 
 export type UserFilter = FilterQuery<UserDto, "name">;
 
@@ -55,6 +57,10 @@ export class UserService {
     currentUser: AuthUser,
     reqData: CreateUserRequest,
   ): Promise<UserDto> {
+    if (reqData.role === RoleName.GUEST) {
+      throw new BadRequestException("cannot create guest user");
+    }
+    
     // TODO: ensure you have permission to give the selected role
     const newUser = this.userRepo.create({
       ...reqData,
