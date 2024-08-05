@@ -3,7 +3,8 @@ import { SessionFetchFn, StartSession } from "../util/fetch-with-session";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { UserEntity } from "@/database/entity/user.entity";
 import { In, Not, Repository } from "typeorm";
-import { SubjectEntity } from "@/database/entity/subject.entity";
+import { SubjectEntity, SubjectType } from "@/database/entity/subject.entity";
+import { RoleName } from "@/module/auth/role/types";
 
 describe("Smoke Tests", () => {
   let baseUrl: string;
@@ -59,6 +60,19 @@ describe("Smoke Tests", () => {
       unownedSubjectId = tstUserSubjectId;
     });
 
+    it("POST /user should fail", async () => {
+      const res = await fetch(`${baseUrl}/user`, {
+        method: "POST",
+        body: Buffer.from(JSON.stringify({
+          name: "dummy-guest",
+          password: "mysecretpassword",
+          email: "dummy-guest@example.com",
+          role: RoleName.USER,
+        }))
+      });
+      expect(res.status).toBe(401);
+    });
+
     it("GET /user should fail", async () => {
       const res = await fetch(`${baseUrl}/user`);
       expect(res.status).toBe(401);
@@ -71,6 +85,25 @@ describe("Smoke Tests", () => {
 
     it("PUT /user/{any} should fail", async () => {
       const res = await fetch(`${baseUrl}/user/${otherId}`, { method: "PUT" });
+      expect(res.status).toBe(401);
+    });
+
+    it("DELETE /user/{any} should fail", async () => {
+      const res = await fetch(`${baseUrl}/user/${otherId}`, { method: "DELETE" });
+      expect(res.status).toBe(401);
+    });
+
+    it("POST /subject should fail", async () => {
+      const res = await fetch(`${baseUrl}/subject`, {
+        method: "POST",
+        body: Buffer.from(JSON.stringify({
+            private: true,
+            key: "test123",
+            display_name: "test",
+            type: SubjectType.IDEA,
+            long_description: "this is a test"
+        }))
+      });
       expect(res.status).toBe(401);
     });
 
@@ -90,6 +123,11 @@ describe("Smoke Tests", () => {
       });
       expect(res.status).toBe(401);
     });
+
+    it("DELETE /subject/{any} should fail", async () => {
+      const res = await fetch(`${baseUrl}/subject/${unownedSubjectId}`, { method: "DELETE" });
+      expect(res.status).toBe(401);
+    });
   });
 
   describe("regular user", () => {
@@ -104,6 +142,19 @@ describe("Smoke Tests", () => {
       otherId = tstAdminId;
       ownedSubjectId = tstUserSubjectId;
       unownedSubjectId = tstAdminSubjectId;
+    });
+
+    it("POST /user should fail", async () => {
+      const res = await sfetch(`/user`, {
+        method: "POST",
+        body: {
+          name: "dummy-user",
+          password: "mysecretpassword",
+          email: "dummy-user@example.com",
+          role: RoleName.USER,
+        }
+      });
+      expect(res.status).toBe(403);
     });
 
     it("GET /user should fail", async () => {
@@ -129,6 +180,31 @@ describe("Smoke Tests", () => {
     it("PUT /user/{self} should succeed", async () => {
       const res = await sfetch(`/user/${selfId}`, { method: "PUT" });
       expect(res.status).toBe(200);
+    });
+
+    it("DELETE /user/{other} should fail", async () => {
+      const res = await sfetch(`/user/${otherId}`, { method: "DELETE" });
+      expect(res.status).toBe(403);
+    });
+
+    // TODO: will need to create dummy user for deleting
+    it.skip("DELETE /user/{self} should fail", async () => {
+      const res = await sfetch(`/user/${selfId}`, { method: "DELETE" });
+      expect(res.status).toBe(403);
+    });
+
+    it("POST /subject should succeed", async () => {
+      const res = await sfetch(`/subject`, {
+        method: "POST",
+        body: {
+          private: true,
+          key: "test456",
+          display_name: "test",
+          type: SubjectType.IDEA,
+          long_description: "this is a test"
+        }
+      });
+      expect(res.status).toBe(201);
     });
 
     it("GET /subject should succeed", async () => {
@@ -162,6 +238,27 @@ describe("Smoke Tests", () => {
       });
       expect(res.status).toBe(403);
     });
+
+    it("PUT /subject/{public} should fail", async () => {
+      const res = await sfetch(`/subject/${publicSubjectId}`, { method: "PUT" });
+      expect(res.status).toBe(403);
+    });
+    
+    // TODO: will need to create dummy subject for deleting
+    it.skip("DELETE /subject/{owned} should fail", async () => {
+      const res = await sfetch(`/subject/${ownedSubjectId}`, { method: "DELETE" });
+      expect(res.status).toBe(403);
+    });
+    
+    it("DELETE /subject/{unowned} should fail", async () => {
+      const res = await sfetch(`/subject/${unownedSubjectId}`, { method: "DELETE" });
+      expect(res.status).toBe(403);
+    });
+    
+    it("DELETE /subject/{public} should fail", async () => {
+      const res = await sfetch(`/subject/${publicSubjectId}`, { method: "DELETE" });
+      expect(res.status).toBe(403);
+    });
   });
 
   describe("admin user", () => {
@@ -176,6 +273,19 @@ describe("Smoke Tests", () => {
       otherId = tstUserId;
       ownedSubjectId = tstAdminSubjectId;
       unownedSubjectId = tstUserSubjectId;
+    });
+
+    it("POST /user should succeed", async () => {
+      const res = await sfetch(`/user`, {
+        method: "POST",
+        body: {
+          name: "dummy-admin",
+          password: "mysecretpassword",
+          email: "dummy-admin@example.com",
+          role: RoleName.USER,
+        }
+      });
+      expect(res.status).toBe(201);
     });
 
     it("GET /user should succeed", async () => {
@@ -201,6 +311,32 @@ describe("Smoke Tests", () => {
     it("PUT /user/{self} should succeed", async () => {
       const res = await sfetch(`/user/${selfId}`, { method: "PUT" });
       expect(res.status).toBe(200);
+    });
+
+    // TODO: will need to create dummy user for deleting
+    it.skip("DELETE /user/{other} should succeed", async () => {
+      const res = await sfetch(`/user/${otherId}`, { method: "DELETE" });
+      expect(res.status).toBe(200);
+    });
+
+    // TODO: will need to create dummy user for deleting
+    it.skip("DELETE /user/{self} should succeed", async () => {
+      const res = await sfetch(`/user/${selfId}`, { method: "DELETE" });
+      expect(res.status).toBe(200);
+    });
+
+    it("POST /subject should succeed", async () => {
+      const res = await sfetch(`/subject`, {
+        method: "POST",
+        body: {
+          private: true,
+          key: "test789",
+          display_name: "test",
+          type: SubjectType.IDEA,
+          long_description: "this is a test"
+        }
+      });
+      expect(res.status).toBe(201);
     });
 
     it("GET /subject should succeed", async () => {
@@ -239,6 +375,24 @@ describe("Smoke Tests", () => {
       const res = await sfetch(`/subject/${publicSubjectId}`, {
         method: "PUT",
       });
+      expect(res.status).toBe(200);
+    });
+    
+    // TODO: will need to create dummy subject for deleting
+    it.skip("DELETE /subject/{owned} should succeed", async () => {
+      const res = await sfetch(`/subject/${ownedSubjectId}`, { method: "DELETE" });
+      expect(res.status).toBe(200);
+    });
+    
+    // TODO: will need to create dummy subject for deleting
+    it.skip("DELETE /subject/{unowned} should succeed", async () => {
+      const res = await sfetch(`/subject/${unownedSubjectId}`, { method: "DELETE" });
+      expect(res.status).toBe(200);
+    });
+    
+    // TODO: will need to create dummy subject for deleting
+    it.skip("DELETE /subject/{public} should succeed", async () => {
+      const res = await sfetch(`/subject/${publicSubjectId}`, { method: "DELETE" });
       expect(res.status).toBe(200);
     });
   });
