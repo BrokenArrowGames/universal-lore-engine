@@ -29,7 +29,7 @@ export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true })
+  @Column({ unique: true, select: false })
   @IsEmail({ require_tld: false })
   email: string;
 
@@ -39,7 +39,7 @@ export class UserEntity extends BaseEntity {
   @Matches(matchers.ALNUM_UNDER_DASH, { message: "User name format invalid" })
   name: string;
 
-  @Column({ default: RoleName.USER })
+  @Column({ default: RoleName.USER, select: false })
   role: RoleName;
 
   @Order(9993)
@@ -52,7 +52,7 @@ export class UserEntity extends BaseEntity {
   createdBy: UserEntity;
 
   @Order(9995)
-  @CreateDateColumn({ name: "created_at" })
+  @CreateDateColumn({ name: "created_at", select: false })
   createdAt: Date;
 
   @Order(9996)
@@ -65,11 +65,11 @@ export class UserEntity extends BaseEntity {
   modifiedBy: UserEntity;
 
   @Order(9998)
-  @UpdateDateColumn({ name: "modified_at" })
+  @UpdateDateColumn({ name: "modified_at", select: false })
   modifiedAt: Date;
 
   @Order(9999)
-  @DeleteDateColumn({ name: "deleted_at" })
+  @DeleteDateColumn({ name: "deleted_at", select: false })
   deletedAt: Date;
 
   @BeforeInsert()

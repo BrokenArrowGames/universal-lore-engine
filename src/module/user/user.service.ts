@@ -86,8 +86,8 @@ export class UserService {
       return UserDtoFromEntity(result);
     } catch (err) {
       if (
-        err instanceof QueryFailedError &&
-        err.message.includes("violates unique constraint")
+        err instanceof QueryFailedError
+        && err.message.includes("violates unique constraint")
       ) {
         throw new ConflictException("record conflict", { cause: err });
       } else {
@@ -117,8 +117,8 @@ export class UserService {
         await manager.update(UserEntity, userId, newUser);
       } catch (err) {
         if (
-          err instanceof QueryFailedError &&
-          err.message.includes("violates unique constraint")
+          err instanceof QueryFailedError
+          && err.message.includes("violates unique constraint")
         ) {
           throw new ConflictException("record conflict", { cause: err });
         } else {

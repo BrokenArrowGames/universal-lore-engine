@@ -2,20 +2,37 @@
 
 import eslint from "@eslint/js";
 import tseslint from "typescript-eslint";
+import stylistic from '@stylistic/eslint-plugin';
 
 export default tseslint.config(
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
+  stylistic.configs.customize({
+    flat: true,
+    indent: 2,
+    arrowParens: true,
+    blockSpacing: true,
+    braceStyle: "1tbs",
+    commaDangle: "always-multiline",
+    semi: true,
+    quotes: "double",
+    quoteProps: "consistent-as-needed",
+  }),
+  stylistic.configs['disable-legacy'],
   {
-    files: ['*/**/*.{js,ts}'],
+    files: ["*/**/*.{js,ts}"],
     ...tseslint.configs.disableTypeChecked,
   },
   {
     rules: {
-      '@typescript-eslint/interface-name-prefix': 'off',
-      '@typescript-eslint/explicit-function-return-type': 'off',
-      '@typescript-eslint/explicit-module-boundary-types': 'off',
-      '@typescript-eslint/no-explicit-any': 'off',
+      "@stylistic/operator-linebreak": [
+        "error",
+        "before"
+      ],
+      "@typescript-eslint/interface-name-prefix": "off",
+      "@typescript-eslint/explicit-function-return-type": "off",
+      "@typescript-eslint/explicit-module-boundary-types": "off",
+      "@typescript-eslint/no-explicit-any": "off",
       
       "no-unused-vars": "off",
       "@typescript-eslint/no-unused-vars": [
@@ -29,40 +46,3 @@ export default tseslint.config(
     }
   }
 );
-
-// module.exports = {
-//   parser: '@typescript-eslint/parser',
-//   parserOptions: {
-//     project: 'tsconfig.json',
-//     tsconfigRootDir: __dirname,
-//     sourceType: 'module',
-//   },
-//   plugins: ['@typescript-eslint/eslint-plugin'],
-//   extends: [
-//     'plugin:@typescript-eslint/recommended',
-//     'plugin:prettier/recommended',
-//   ],
-//   root: true,
-//   env: {
-//     node: true,
-//     jest: true,
-//   },
-//   // files: ["{src,test,scripts}/**/*.{ts,js}"],
-//   ignorePatterns: ['.eslintrc.js'],
-//   rules: {
-//     '@typescript-eslint/interface-name-prefix': 'off',
-//     '@typescript-eslint/explicit-function-return-type': 'off',
-//     '@typescript-eslint/explicit-module-boundary-types': 'off',
-//     '@typescript-eslint/no-explicit-any': 'off',
-    
-//     "no-unused-vars": "off",
-//     "@typescript-eslint/no-unused-vars": [
-//       "error",
-//       {
-//         "argsIgnorePattern": "^_",
-//         "varsIgnorePattern": "^_",
-//         "caughtErrorsIgnorePattern": "^_"
-//       }
-//     ]
-//   },
-// };

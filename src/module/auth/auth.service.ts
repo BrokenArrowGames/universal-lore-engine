@@ -47,10 +47,10 @@ export class AuthService {
       return result.AuthenticationResult.AccessToken;
     } catch (err) {
       if (
-        err instanceof InvalidPasswordException ||
-        err instanceof NotAuthorizedException ||
-        err instanceof ResourceNotFoundException ||
-        err instanceof UserNotFoundException
+        err instanceof InvalidPasswordException
+        || err instanceof NotAuthorizedException
+        || err instanceof ResourceNotFoundException
+        || err instanceof UserNotFoundException
       ) {
         throw new BadRequestException("Invalid username or password", {
           cause: err,

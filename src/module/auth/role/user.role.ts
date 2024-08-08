@@ -34,6 +34,13 @@ export const UserRole = new Role(RoleName.USER, [
     undefined,
     Condition.PropEqualsCurrentUserId("createdBy.id"),
   ),
+  new Permission(
+    AuthAction.READ,
+    AuthSubject.SUBJECT,
+    ["note"],
+    Condition.PropEqualsCurrentUserId("createdBy.id"),
+  ),
+
   // new Permission(AuthAction.READ_PRIVATE, AuthSubject.SUBJECT, undefined, (ctx) => { id: { $eq: ctx.currentUser.readList } }),
   // new Permission(AuthAction.UPDATE,       AuthSubject.SUBJECT, undefined, (ctx) => { id: { $eq: ctx.currentUser.writeList } }),
 

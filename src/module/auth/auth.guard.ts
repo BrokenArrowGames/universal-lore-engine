@@ -36,8 +36,9 @@ export class AuthGuard implements CanActivate {
     handler: any,
   ): Promise<boolean> {
     if (req.session?.token) {
-      const user = await this.userRepo.findOneByOrFail({
-        name: req.session?.username,
+      const user = await this.userRepo.findOneOrFail({
+        where: { name: req.session?.username },
+        select: { id: true, name: true, role: true },
       });
 
       req.user = {

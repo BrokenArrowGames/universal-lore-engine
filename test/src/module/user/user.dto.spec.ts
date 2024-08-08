@@ -4,7 +4,7 @@ import {
   UserDtoFromEntity,
   UserEntityFromDto,
 } from "@mod/user/user.dto";
-import { RandomMockUser } from "@test/util/mock-user";
+import { RandomMockUser } from "./mock-user";
 import { RandomIntInRange, RandomName } from "@test/util/random";
 
 describe("UserEntityFromDto", () => {

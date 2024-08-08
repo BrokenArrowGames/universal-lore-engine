@@ -53,8 +53,8 @@ export class AppLogger implements LoggerService {
     optionalParams: any[],
   ) {
     let context = this.context;
-    const msg: object =
-      typeof message === "object" ? (message as object) : { message };
+    const msg: object
+      = typeof message === "object" ? (message as object) : { message };
     const subContext = optionalParams[optionalParams.length - 1];
     if (typeof subContext === "string") {
       context += `.${subContext}`;
@@ -69,18 +69,23 @@ export class AppLogger implements LoggerService {
   public log(message: any, ...optionalParams: any[]) {
     this.printMessages("info", message, optionalParams);
   }
+
   public fatal(message: any, ...optionalParams: any[]) {
     this.printMessages("fatal", message, optionalParams);
   }
+
   public error(message: any, ...optionalParams: any[]) {
     this.printMessages("error", message, optionalParams);
   }
+
   public warn(message: any, ...optionalParams: any[]) {
     this.printMessages("warn", message, optionalParams);
   }
+
   public debug?(message: any, ...optionalParams: any[]) {
     this.printMessages("debug", message, optionalParams);
   }
+
   public verbose?(message: any, ...optionalParams: any[]) {
     this.printMessages("trace", message, optionalParams);
   }
