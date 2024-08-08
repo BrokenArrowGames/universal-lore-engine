@@ -31,26 +31,6 @@ export function RandomMockUser(manual?: DeepPartial<UserEntity>): UserEntity {
     = (manual?.modifiedAt as Date)
     ?? RandomDateInRange(1, 30, result.createdAt.getTime());
   return result;
-
-  // const firstName = opt?.firstName ?? RandomName();
-  // const lastName = opt?.lastName ?? RandomName();
-  // const creatorId = opt?.creatorId ?? RandomIntInRange(1000, 9999);
-  // const modifierId = opt?.modifierId ?? RandomIntInRange(1000, 9999);
-  // const createDate = opt?.createDate ?? RandomDateInRange(-30, 30);
-  // const modifyDate =
-  //   opt?.modifyDate ?? RandomDateInRange(createDate.getTime(), 30);
-
-  // return {
-  //   id: RandomIntInRange(2, 9999),
-  //   email: `${firstName}.${lastName}@example.com`,
-  //   name: `TEST_${firstName}_${lastName}`,
-  //   createdById: creatorId,
-  //   createdBy: { id: creatorId } as UserEntity,
-  //   createdAt: createDate,
-  //   modifiedById: modifierId,
-  //   modifiedBy: { id: modifierId } as UserEntity,
-  //   modifiedAt: modifyDate,
-  // } as UserEntity;
 }
 
 export const mockUsers: { [key: string]: UserEntity } = {
