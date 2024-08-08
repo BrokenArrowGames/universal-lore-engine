@@ -67,7 +67,6 @@ export class SubjectService {
     }
   }
 
-  // TODO: ensure createdBy relation doesn't expose user emails
   public async getSubjectById(
     currentUser: AuthUser,
     id: number,

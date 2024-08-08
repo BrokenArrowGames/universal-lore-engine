@@ -19,7 +19,6 @@ import { ForbiddenError, subject } from "@casl/ability";
 import { AuthAction } from "@mod/auth/util/auth-actions";
 import { AuthSubject } from "@mod/auth/util/auth-subjects";
 
-// TODO: auth checks
 @Controller("user")
 @UseGuards(AuthGuard)
 export class UserController {

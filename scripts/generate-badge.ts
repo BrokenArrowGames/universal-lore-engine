@@ -5,10 +5,6 @@ GenBadge("version", `v${appVer}`);
 
 const { pct: covPct, color: covColor } = GetCoverageInfo();
 GenBadge("coverage", `${covPct}%25`, { color: covColor });
-// if (covPct < 70) {
-//   process.exit(1);
-// }
-// process.exit(1);
 
 interface BadgeOpts {
   color: string;

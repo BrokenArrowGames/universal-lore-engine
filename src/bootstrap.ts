@@ -18,8 +18,6 @@ export async function bootstrap(app) {
 
   const sessionRepository = app.get(getRepositoryToken(SessionEntity));
 
-  // TODO: need real session store, such as redis
-  // https://docs.nestjs.com/techniques/session
   app.use(
     session({
       store: new TypeormStore({
