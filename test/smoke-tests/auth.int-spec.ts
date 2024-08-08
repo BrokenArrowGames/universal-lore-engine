@@ -5,6 +5,9 @@ import { UserEntity } from "@/database/entity/user.entity";
 import { In, Not, Repository } from "typeorm";
 import { SubjectEntity, SubjectType } from "@/database/entity/subject.entity";
 import { RoleName } from "@/module/auth/role/types";
+import { UserDto } from "@/module/user/user.dto";
+import { RandomIntInRange, RandomName } from "@test/util/random";
+import { SubjectDto } from "@/module/subject/subject.dto";
 
 describe("Smoke Tests", () => {
   let baseUrl: string;
@@ -65,9 +68,9 @@ describe("Smoke Tests", () => {
         method: "POST",
         body: Buffer.from(
           JSON.stringify({
-            name: "dummy-guest",
+            name: "dummy-by-guest",
             password: "mysecretpassword",
-            email: "dummy-guest@example.com",
+            email: "dummy-by-guest@example.com",
             role: RoleName.USER,
           }),
         ),
@@ -156,9 +159,9 @@ describe("Smoke Tests", () => {
       const res = await sfetch(`/user`, {
         method: "POST",
         body: {
-          name: "dummy-user",
+          name: "dummy-by-user",
           password: "mysecretpassword",
-          email: "dummy-user@example.com",
+          email: "dummy-by-user@example.com",
           role: RoleName.USER,
         },
       });
@@ -209,6 +212,7 @@ describe("Smoke Tests", () => {
           key: "test456",
           display_name: "test",
           type: SubjectType.IDEA,
+          tags: [],
           long_description: "this is a test",
         },
       });
@@ -254,12 +258,33 @@ describe("Smoke Tests", () => {
       expect(res.status).toBe(403);
     });
 
-    // TODO: will need to create dummy subject for deleting
-    it.skip("DELETE /subject/{owned} should fail", async () => {
-      const res = await sfetch(`/subject/${ownedSubjectId}`, {
-        method: "DELETE",
+    it("DELETE /subject/{owned} should fail", async () => {
+      const key = `${RandomName()}-${RandomIntInRange(1000, 9999)}`;
+      const createRes = await sfetch(`/subject/`, {
+        method: "POST",
+        body: {
+          private: true,
+          key,
+          display_name: "test",
+          type: SubjectType.IDEA,
+          tags: [],
+          long_description: "this is a test",
+        },
       });
-      expect(res.status).toBe(403);
+      expect(createRes.status).toBe(201);
+      let subject = JSON.parse(createRes.body) as SubjectDto;
+      expect(subject.key).toBe(key);
+
+      let getRes = await sfetch(`/subject/${subject.id}`);
+      expect(getRes.status).toBe(200);
+      subject = JSON.parse(getRes.body) as SubjectDto;
+      expect(subject.key).toBe(key);
+
+      const res = await sfetch(`/subject/${subject.id}`, { method: "DELETE" });
+      expect(res.status).toBe(200);
+
+      getRes = await sfetch(`/subject/${subject.id}`);
+      expect(getRes.status).toBe(404);
     });
 
     it("DELETE /subject/{unowned} should fail", async () => {
@@ -295,9 +320,9 @@ describe("Smoke Tests", () => {
       const res = await sfetch(`/user`, {
         method: "POST",
         body: {
-          name: "dummy-admin",
+          name: "dummy-by-admin",
           password: "mysecretpassword",
-          email: "dummy-admin@example.com",
+          email: "dummy-by-admin@example.com",
           role: RoleName.USER,
         },
       });
@@ -329,10 +354,31 @@ describe("Smoke Tests", () => {
       expect(res.status).toBe(200);
     });
 
-    // TODO: will need to create dummy user for deleting
-    it.skip("DELETE /user/{other} should succeed", async () => {
-      const res = await sfetch(`/user/${otherId}`, { method: "DELETE" });
+    it("DELETE /user/{other} should succeed", async () => {
+      const username = `dummy-by-admin-${RandomIntInRange(1000, 9999)}`;
+      const createRes = await sfetch(`/user/`, {
+        method: "POST",
+        body: {
+          name: username,
+          password: "mysecretpassword",
+          email: `${username}@example.com`,
+          role: RoleName.USER,
+        },
+      });
+      expect(createRes.status).toBe(201);
+      let user = JSON.parse(createRes.body) as UserDto;
+      expect(user.name).toBe(username);
+
+      let getRes = await sfetch(`/user/${user.id}`);
+      expect(getRes.status).toBe(200);
+      user = JSON.parse(getRes.body) as UserDto;
+      expect(user.name).toBe(username);
+
+      const res = await sfetch(`/user/${user.id}`, { method: "DELETE" });
       expect(res.status).toBe(200);
+
+      getRes = await sfetch(`/user/${user.id}`);
+      expect(getRes.status).toBe(404);
     });
 
     // TODO: will need to create dummy user for deleting
@@ -349,6 +395,7 @@ describe("Smoke Tests", () => {
           key: "test789",
           display_name: "test",
           type: SubjectType.IDEA,
+          tags: [],
           long_description: "this is a test",
         },
       });
@@ -394,28 +441,105 @@ describe("Smoke Tests", () => {
       expect(res.status).toBe(200);
     });
 
-    // TODO: will need to create dummy subject for deleting
-    it.skip("DELETE /subject/{owned} should succeed", async () => {
-      const res = await sfetch(`/subject/${ownedSubjectId}`, {
-        method: "DELETE",
+    it("DELETE /subject/{owned} should succeed", async () => {
+      const key = `${RandomName()}-${RandomIntInRange(1000, 9999)}`;
+      const createRes = await sfetch(`/subject/`, {
+        method: "POST",
+        body: {
+          private: true,
+          key,
+          display_name: "test",
+          type: SubjectType.IDEA,
+          tags: [],
+          long_description: "this is a test",
+        },
       });
+      expect(createRes.status).toBe(201);
+      let subject = JSON.parse(createRes.body) as SubjectDto;
+      expect(subject.key).toBe(key);
+
+      let getRes = await sfetch(`/subject/${subject.id}`);
+      expect(getRes.status).toBe(200);
+      subject = JSON.parse(getRes.body) as SubjectDto;
+      expect(subject.key).toBe(key);
+
+      const res = await sfetch(`/subject/${subject.id}`, { method: "DELETE" });
       expect(res.status).toBe(200);
+
+      getRes = await sfetch(`/subject/${subject.id}`);
+      expect(getRes.status).toBe(404);
     });
 
-    // TODO: will need to create dummy subject for deleting
-    it.skip("DELETE /subject/{unowned} should succeed", async () => {
-      const res = await sfetch(`/subject/${unownedSubjectId}`, {
-        method: "DELETE",
+    it("DELETE /subject/{unowned} should succeed", async () => {
+      const usrFetch = await StartSession(
+        baseUrl,
+        "tst_user",
+        "mysecretpassword",
+      );
+
+      const key = `${RandomName()}-${RandomIntInRange(1000, 9999)}`;
+      const createRes = await usrFetch(`/subject/`, {
+        method: "POST",
+        body: {
+          private: true,
+          key,
+          display_name: "test",
+          type: SubjectType.IDEA,
+          tags: [],
+          long_description: "this is a test",
+        },
       });
+      expect(createRes.status).toBe(201);
+      let subject = JSON.parse(createRes.body) as SubjectDto;
+      expect(subject.key).toBe(key);
+
+      let getRes = await sfetch(`/subject/${subject.id}`);
+      expect(getRes.status).toBe(200);
+      subject = JSON.parse(getRes.body) as SubjectDto;
+      expect(subject.key).toBe(key);
+      expect(subject.createdBy.name).toBe("tst_user");
+
+      const res = await sfetch(`/subject/${subject.id}`, { method: "DELETE" });
       expect(res.status).toBe(200);
+
+      getRes = await sfetch(`/subject/${subject.id}`);
+      expect(getRes.status).toBe(404);
     });
 
-    // TODO: will need to create dummy subject for deleting
-    it.skip("DELETE /subject/{public} should succeed", async () => {
-      const res = await sfetch(`/subject/${publicSubjectId}`, {
-        method: "DELETE",
+    it("DELETE /subject/{public} should succeed", async () => {
+      const usrFetch = await StartSession(
+        baseUrl,
+        "tst_user",
+        "mysecretpassword",
+      );
+
+      const key = `${RandomName()}-${RandomIntInRange(1000, 9999)}`;
+      const createRes = await usrFetch(`/subject/`, {
+        method: "POST",
+        body: {
+          private: false,
+          key,
+          display_name: "test",
+          type: SubjectType.IDEA,
+          tags: [],
+          long_description: "this is a test",
+        },
       });
+      expect(createRes.status).toBe(201);
+      let subject = JSON.parse(createRes.body) as SubjectDto;
+      expect(subject.key).toBe(key);
+
+      let getRes = await sfetch(`/subject/${subject.id}`);
+      expect(getRes.status).toBe(200);
+      subject = JSON.parse(getRes.body) as SubjectDto;
+      expect(subject.key).toBe(key);
+      expect(subject.createdBy.name).toBe("tst_user");
+
+      const res = await sfetch(`/subject/${subject.id}`, { method: "DELETE" });
       expect(res.status).toBe(200);
+
+      getRes = await sfetch(`/subject/${subject.id}`);
+      expect(getRes.status).toBe(404);
     });
   });
 });

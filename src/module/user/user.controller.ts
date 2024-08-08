@@ -68,7 +68,7 @@ export class UserController {
     @Param("id", ParseIntPipe) id: number,
   ): Promise<void> {
     ForbiddenError.from(req.user.ability).throwUnlessCan(
-      AuthAction.DELETE,
+      AuthAction.DELETE_SOFT,
       subject(AuthSubject.USER, { id }),
     );
     return this.userService.deleteUser(req.user, id);

@@ -24,8 +24,8 @@ export async function StartSession(
   ) => {
     let body: Buffer | undefined = undefined;
     if (options?.body) {
-      body =
-        options.body instanceof Buffer
+      body
+        = options.body instanceof Buffer
           ? options.body
           : typeof options.body === "string"
             ? Buffer.from(options.body)
@@ -39,7 +39,7 @@ export async function StartSession(
       headers: {
         "Content-Type": "application/json",
         ...(options?.headers ?? {}),
-        Cookie: cookie,
+        "Cookie": cookie,
         "App-Correlation-Id": correlationId,
       },
     });

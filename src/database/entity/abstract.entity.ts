@@ -26,7 +26,7 @@ export abstract class AbstractEntity extends BaseEntity {
   createdBy: UserEntity;
 
   @Order(9996)
-  @CreateDateColumn({ name: "created_at" })
+  @CreateDateColumn({ name: "created_at", select: false })
   createdAt: Date;
 
   @Order(9997)
@@ -35,11 +35,11 @@ export abstract class AbstractEntity extends BaseEntity {
   modifiedBy: UserEntity;
 
   @Order(9998)
-  @UpdateDateColumn({ name: "modified_at" })
+  @UpdateDateColumn({ name: "modified_at", select: false })
   modifiedAt: Date;
 
   @Order(9999)
-  @DeleteDateColumn({ name: "deleted_at" })
+  @DeleteDateColumn({ name: "deleted_at", select: false })
   deletedAt: Date;
 
   @BeforeInsert()

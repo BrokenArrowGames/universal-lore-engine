@@ -24,7 +24,6 @@ import { AuthAction } from "@mod/auth/util/auth-actions";
 import { AuthSubject } from "@mod/auth/util/auth-subjects";
 import { AllowGuestSession } from "@mod/auth/decorator/allow-guest-session";
 
-// TODO: auth checks
 @Controller("subject")
 @UseGuards(AuthGuard)
 export class SubjectController {
@@ -74,7 +73,7 @@ export class SubjectController {
     @Param("id", ParseIntPipe) id: number,
   ): Promise<void> {
     ForbiddenError.from(req.user.ability).throwUnlessCan(
-      AuthAction.DELETE,
+      AuthAction.DELETE_SOFT,
       AuthSubject.SUBJECT,
     );
     return this.subjectService.deleteSubject(req.user, id);

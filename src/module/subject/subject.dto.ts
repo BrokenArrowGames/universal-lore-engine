@@ -17,7 +17,7 @@ export class SubjectDto {
   key: string;
   display_name: string;
   type: SubjectType;
-  tags?: SubjectTagDto[];
+  tags: SubjectTagDto[];
   short_description?: string;
   long_description?: string;
   note?: string;
@@ -36,10 +36,9 @@ export type CreateSubjectRequest = Omit<
   | "modifiedBy"
   | "modifiedAt"
 > &
-  Required<Pick<SubjectDto, "long_description">>;
+Required<Pick<SubjectDto, "long_description">>;
 
-export type UpdateSubjectRequest = Pick<UserDto, "id"> &
-  Partial<CreateSubjectRequest>;
+export type UpdateSubjectRequest = Partial<CreateSubjectRequest>;
 
 export function SubjectDtoFromEntity(entity: SubjectEntity): SubjectDto {
   return {
@@ -48,7 +47,7 @@ export function SubjectDtoFromEntity(entity: SubjectEntity): SubjectDto {
     key: entity.key,
     display_name: entity.display_name,
     type: entity.type,
-    tags: entity.tags?.map(SubjectTagDtoFromEntity),
+    tags: entity.tags.map(SubjectTagDtoFromEntity),
     short_description: entity.short_description,
     long_description: entity.long_description,
     note: entity.note,
@@ -56,7 +55,7 @@ export function SubjectDtoFromEntity(entity: SubjectEntity): SubjectDto {
       ? UserDtoFromEntity(entity.createdBy)
       : undefined,
     createdAt: entity.createdAt,
-    modifiedBy: entity.createdBy
+    modifiedBy: entity.modifiedBy
       ? UserDtoFromEntity(entity.modifiedBy)
       : undefined,
     modifiedAt: entity.modifiedAt,

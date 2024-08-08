@@ -109,8 +109,8 @@ export class Subjects1722728782522 implements MigrationInterface {
       name: SYS_USER,
     });
 
-    const [{ id: dummyTagId }, { id: goodTagId }, { id: evilTagId }] =
-      await queryRunner.manager.save(
+    const [{ id: dummyTagId }, { id: goodTagId }, { id: evilTagId }]
+      = await queryRunner.manager.save(
         SubjectTagEntity,
         this.tags.map((tag) => ({
           ...tag,
@@ -128,14 +128,14 @@ export class Subjects1722728782522 implements MigrationInterface {
     await queryRunner.manager.save(
       SubjectEntity,
       this.subjects.map((subj, i) => {
-        const usr =
-          subj.createdBy?.name === "tst_admin"
+        const usr
+          = subj.createdBy?.name === "tst_admin"
             ? adminUser
             : subj.createdBy?.name === "tst_user"
               ? normUser
               : sysUser;
-        const tags =
-          subj.type === SubjectType.PERSON
+        const tags
+          = subj.type === SubjectType.PERSON
             ? [{ id: dummyTagId }, { id: i % 2 ? goodTagId : evilTagId }]
             : [{ id: dummyTagId }];
         return {

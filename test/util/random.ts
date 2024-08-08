@@ -1,9 +1,14 @@
 export function RandomIntInRange(min: number, max: number): number {
+  if (min === max) return max;
   return Math.floor(min + Math.random() * (max - min));
 }
 
-export function RandomDateInRange(min: number, max: number): Date {
-  const now = Date.now();
+export function RandomDateInRange(
+  min: number,
+  max: number,
+  base?: number,
+): Date {
+  const now = base ?? Date.now();
   const offset = RandomIntInRange(min, max) * 1000 * 60 * 60 * 24;
   return new Date(now + offset);
 }
@@ -113,4 +118,26 @@ export function RandomName(): string {
     "Stella",
   ];
   return names[RandomIntInRange(0, names.length)];
+}
+
+export function RandomArray<T>(filler: () => T, min: number, max?: number) {
+  const len = RandomIntInRange(min, max ?? min);
+  if (len < 1) return [];
+  return new Array(len + 1).fill(filler).map((fn) => fn());
+}
+
+export function RandomStringOfLength(
+  min: number,
+  max: number,
+  chars: string = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+) {
+  return RandomArray(
+    () => chars[RandomIntInRange(0, chars.length)],
+    min,
+    max,
+  ).join("");
+}
+
+export function RandomElement<T>(values: T[]): T {
+  return values[RandomIntInRange(0, values.length)];
 }

@@ -14,7 +14,7 @@ export class SubjectTagService {
     private readonly subjectTagRepo: Repository<SubjectTagEntity>,
   ) {}
 
-  public async getFilteredSubjectTags(
+  public async getFilteredSubjectTagList(
     filterQuery: SubjectTagFilter,
   ): Promise<SubjectTagDto[]> {
     const entities = await this.subjectTagRepo.findBy({

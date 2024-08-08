@@ -140,8 +140,8 @@ export class AsyncProcessRunner {
 
     waiting.forEach((w) =>
       this.children[w].process.dependencies.push(
-        ...(this.children[w].dependsOn?.map((d) => this.children[d].process) ??
-          []),
+        ...(this.children[w].dependsOn?.map((d) => this.children[d].process)
+        ?? []),
       ),
     );
 

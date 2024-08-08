@@ -57,8 +57,8 @@ export class SubjectService {
       return SubjectDtoFromEntity(result);
     } catch (err) {
       if (
-        err instanceof QueryFailedError &&
-        err.message.includes("violates unique constraint")
+        err instanceof QueryFailedError
+        && err.message.includes("violates unique constraint")
       ) {
         throw new ConflictException("record conflict", { cause: err });
       } else {
@@ -67,6 +67,7 @@ export class SubjectService {
     }
   }
 
+  // TODO: ensure createdBy relation doesn't expose user emails
   public async getSubjectById(
     currentUser: AuthUser,
     id: number,
@@ -76,6 +77,7 @@ export class SubjectService {
         where: { id },
         relations: ["tags", "createdBy", "modifiedBy"],
       });
+
       ForbiddenError.from(currentUser.ability).throwUnlessCan(
         AuthAction.READ,
         subject(AuthSubject.SUBJECT, entity),
@@ -108,29 +110,37 @@ export class SubjectService {
     try {
       const entity = await this.subjectRepo.findOneOrFail({
         where: { id: subjectId },
-        relations: ["createdBy"],
+        relations: ["createdBy", "tags"],
       });
       ForbiddenError.from(currentUser.ability).throwUnlessCan(
         AuthAction.UPDATE,
         subject(AuthSubject.SUBJECT, entity),
       );
+
+      const newSubject = this.subjectRepo.create({
+        ...subjectData,
+        modifiedBy: { id: currentUser.id },
+      });
+
+      await this.subjectRepo.update(subjectId, newSubject);
+
+      const result = await this.subjectRepo.findOneOrFail({
+        where: { id: subjectId },
+        relations: ["tags"],
+      });
+      return SubjectDtoFromEntity(result);
     } catch (err) {
       if (err instanceof EntityNotFoundError) {
         throw new NotFoundException("record not found", { cause: err });
+      } else if (
+        err instanceof QueryFailedError
+        && err.message.includes("violates unique constraint")
+      ) {
+        throw new ConflictException("record conflict", { cause: err });
       } else {
         throw err;
       }
     }
-
-    const newSubject = this.subjectRepo.create({
-      ...subjectData,
-      modifiedBy: { id: currentUser.id },
-    });
-
-    await this.subjectRepo.update(subjectId, newSubject);
-
-    const result = await this.subjectRepo.findOneByOrFail({ id: subjectId });
-    return SubjectDtoFromEntity(result);
   }
 
   public async deleteSubject(
@@ -138,11 +148,13 @@ export class SubjectService {
     subjectId: number,
   ): Promise<void> {
     try {
-      const subjectEntity = await this.subjectRepo.findOneByOrFail({
-        id: subjectId,
+      const subjectEntity = await this.subjectRepo.findOneOrFail({
+        where: { id: subjectId },
+        relations: ["createdBy"],
       });
+
       ForbiddenError.from(currentUser.ability).throwUnlessCan(
-        AuthAction.DELETE,
+        AuthAction.DELETE_SOFT,
         subject(AuthSubject.SUBJECT, subjectEntity),
       );
 
@@ -158,9 +170,9 @@ export class SubjectService {
 
   public async getFilteredSubjectList(
     currentUser: AuthUser,
-    filterQuery: SubjectFilter,
+    filterQuery?: SubjectFilter,
   ): Promise<SubjectDto[]> {
-    const tags = filterQuery.tags?.split(",").filter((tag) => tag);
+    const tags = filterQuery?.tags?.split(",").filter((tag) => tag);
     let tmpQuery = this.subjectRepo
       .createQueryBuilder("subject")
       .select("subject.id")
@@ -192,6 +204,7 @@ export class SubjectService {
       select: {
         id: true,
         private: true,
+        key: true,
         display_name: true,
         type: true,
         tags: true,
@@ -213,10 +226,13 @@ export class SubjectService {
           ) {
             return {
               id: dto.id,
+              key: this.REDACTED,
+              private: dto.private,
               type: dto.type,
               display_name: this.REDACTED,
               tags: [],
-            } as SubjectDto;
+              short_description: this.REDACTED,
+            };
           } else {
             return dto;
           }

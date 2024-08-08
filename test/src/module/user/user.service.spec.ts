@@ -12,20 +12,24 @@ import { UserService } from "@mod/user/user.service";
 import { ConflictException, NotFoundException } from "@nestjs/common";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { DummyError } from "@test/util/dummy-error";
-import { MockDbRepo, RandomMockUser } from "@test/util/mock-user";
+import { MockDbUtils } from "@test/util/mock-repo";
+import { RandomMockUser } from "./mock-user";
 import { ValidationError } from "class-validator";
 import { EntityNotFoundError, QueryFailedError, Repository } from "typeorm";
+import { RoleName } from "@/module/auth/role/types";
 
 describe("UserService", () => {
   let service: UserService;
   let _authService: jest.Mocked<AuthService>;
-  let userRepo: jest.MaybeMockedDeep<Repository<UserEntity>>;
+  let repo: jest.MaybeMockedDeep<Repository<UserEntity>>;
 
   beforeEach(async () => {
-    userRepo = MockDbRepo<UserEntity>();
+    const mockRepo = MockDbUtils<UserEntity>(RandomMockUser);
+    repo = mockRepo.repo;
+
     const { unit, unitRef } = TestBed.create(UserService)
       .mock(getRepositoryToken(UserEntity) as string)
-      .using(userRepo)
+      .using(repo)
       .compile();
 
     service = unit;
@@ -37,8 +41,8 @@ describe("UserService", () => {
   });
 
   describe("getFilteredUsers", () => {
-    it("should return empty array when no users are found", () => {
-      userRepo.find.mockResolvedValue([]);
+    it("should return empty array when no entities are found", () => {
+      repo.find.mockResolvedValue([]);
 
       return expect(
         service.getFilteredUserList({} as AuthUser),
@@ -46,7 +50,7 @@ describe("UserService", () => {
     });
 
     it("should allow null filter properties", () => {
-      userRepo.find.mockResolvedValue([]);
+      repo.find.mockResolvedValue([]);
 
       return expect(
         service.getFilteredUserList({} as AuthUser, {
@@ -58,22 +62,22 @@ describe("UserService", () => {
     });
 
     it("should allow filter by name", () => {
-      userRepo.find.mockResolvedValue([]);
+      repo.find.mockResolvedValue([]);
 
       return expect(
         service.getFilteredUserList({} as AuthUser, { name: "test" }),
       ).resolves.toStrictEqual([]);
     });
 
-    it("should correctly map to dto when users are found", () => {
-      const users = [RandomMockUser(), RandomMockUser(), RandomMockUser()];
+    it("should correctly map to dto when entities are found", () => {
+      const entities = [RandomMockUser(), RandomMockUser(), RandomMockUser()];
       const expected: UserDto[] = [
-        { id: users[0].id, name: users[0].name },
-        { id: users[1].id, name: users[1].name },
-        { id: users[2].id, name: users[2].name },
+        { id: entities[0].id, name: entities[0].name },
+        { id: entities[1].id, name: entities[1].name },
+        { id: entities[2].id, name: entities[2].name },
       ];
 
-      userRepo.find.mockResolvedValue(users);
+      repo.find.mockResolvedValue(entities);
 
       return expect(
         service.getFilteredUserList({} as AuthUser),
@@ -81,7 +85,7 @@ describe("UserService", () => {
     });
 
     it("should rethrow when unhandled exception occurs", () => {
-      userRepo.find.mockRejectedValue(new DummyError());
+      repo.find.mockRejectedValue(new DummyError());
 
       return expect(
         service.getFilteredUserList({} as AuthUser),
@@ -90,22 +94,22 @@ describe("UserService", () => {
   });
 
   describe("getUserById", () => {
-    it("should correctly map to dto when user is present", () => {
-      const user = RandomMockUser();
+    it("should correctly map to dto when entity is present", () => {
+      const entity = RandomMockUser();
       const expected: UserDto = {
-        id: user.id,
-        name: user.name,
+        id: entity.id,
+        name: entity.name,
       };
 
-      userRepo.findOneOrFail.mockResolvedValue(user);
+      repo.findOneOrFail.mockResolvedValue(entity);
 
       return expect(
         service.getUserById({} as AuthUser, expected.id),
       ).resolves.toStrictEqual(expected);
     });
 
-    it("should throw NotFoundException when user is missing", () => {
-      userRepo.findOneOrFail.mockRejectedValue(
+    it("should throw NotFoundException when entity is missing", () => {
+      repo.findOneOrFail.mockRejectedValue(
         new EntityNotFoundError(UserEntity, undefined),
       );
 
@@ -115,7 +119,7 @@ describe("UserService", () => {
     });
 
     it("should rethrow when unhandled exception occurs", () => {
-      userRepo.findOneOrFail.mockRejectedValue(new DummyError());
+      repo.findOneOrFail.mockRejectedValue(new DummyError());
 
       return expect(service.getUserById({} as AuthUser, 1)).rejects.toThrow(
         DummyError,
@@ -125,33 +129,33 @@ describe("UserService", () => {
 
   describe("createUser", () => {
     it("should call entity validations", async () => {
-      const user = RandomMockUser();
+      const entity = RandomMockUser();
 
-      userRepo.manager.save.mockResolvedValue(user);
+      repo.manager.save.mockResolvedValue(entity);
 
       await service.createUser(
         {} as AuthUser,
         { password: "dummy password" } as CreateUserRequest,
       );
-      return expect(userRepo.create).toHaveBeenCalledTimes(1);
+      return expect(repo.create).toHaveBeenCalledTimes(1);
     });
 
     it("should use a transaction", async () => {
-      const user = RandomMockUser();
+      const entity = RandomMockUser();
 
-      userRepo.manager.save.mockResolvedValue(user);
+      repo.manager.save.mockResolvedValue(entity);
 
       await service.createUser(
         {} as AuthUser,
         { password: "dummy password" } as CreateUserRequest,
       );
-      return expect(userRepo.manager.transaction).toHaveBeenCalledTimes(1);
+      return expect(repo.manager.transaction).toHaveBeenCalledTimes(1);
     });
 
     it("should call cognito create user function", async () => {
-      const user = RandomMockUser();
+      const entity = RandomMockUser();
 
-      userRepo.manager.save.mockResolvedValue(user);
+      repo.manager.save.mockResolvedValue(entity);
 
       await service.createUser(
         {} as AuthUser,
@@ -160,18 +164,19 @@ describe("UserService", () => {
       return expect(_authService.createUser).toHaveBeenCalledTimes(1);
     });
 
-    it("should correctly map to dto when user is created", () => {
-      const user = RandomMockUser();
+    it("should correctly map to dto when entity is created", () => {
+      const entity = RandomMockUser();
       const expected: UserDto = {
-        id: user.id,
-        name: user.name,
+        id: entity.id,
+        name: entity.name,
       };
 
-      userRepo.manager.save.mockResolvedValue(user);
+      repo.manager.save.mockResolvedValue(entity);
 
       return expect(
         service.createUser({} as AuthUser, {
-          ...user,
+          ...entity,
+          role: RoleName.USER,
           password: "dummy password",
         }),
       ).resolves.toStrictEqual(expected);
@@ -184,7 +189,7 @@ describe("UserService", () => {
     });
 
     it.skip("should rethrow exception when entity validation fails", () => {
-      userRepo.manager.save.mockRejectedValue(new ValidationError());
+      repo.manager.save.mockRejectedValue(new ValidationError());
 
       return expect(
         service.createUser(
@@ -197,7 +202,7 @@ describe("UserService", () => {
     it("should throw ConflictException for contstraint violations", () => {
       const err = new QueryFailedError("", [], new Error());
       err.message = "violates unique constraint";
-      userRepo.manager.save.mockRejectedValue(err);
+      repo.manager.save.mockRejectedValue(err);
 
       return expect(
         service.createUser(
@@ -208,7 +213,7 @@ describe("UserService", () => {
     });
 
     it("should rethrow when unhandled exception occurs", () => {
-      userRepo.manager.save.mockRejectedValue(new DummyError());
+      repo.manager.save.mockRejectedValue(new DummyError());
 
       return expect(
         service.createUser(
@@ -221,36 +226,36 @@ describe("UserService", () => {
 
   describe("updateUser", () => {
     it("should call entity validations", async () => {
-      const user = RandomMockUser();
+      const entity = RandomMockUser();
 
-      userRepo.findOneByOrFail.mockResolvedValue(user);
+      repo.findOneByOrFail.mockResolvedValue(entity);
 
       await service.updateUser({} as AuthUser, 0, {} as UpdateUserRequest);
-      return expect(userRepo.create).toHaveBeenCalledTimes(1);
+      return expect(repo.create).toHaveBeenCalledTimes(1);
     });
 
     it("should use a transaction", async () => {
-      const user = RandomMockUser();
+      const entity = RandomMockUser();
 
-      userRepo.findOneByOrFail.mockResolvedValue(user);
-
-      await service.updateUser({} as AuthUser, 0, {} as UpdateUserRequest);
-      return expect(userRepo.manager.transaction).toHaveBeenCalledTimes(1);
-    });
-
-    it("should update user in database", async () => {
-      const user = RandomMockUser();
-
-      userRepo.findOneByOrFail.mockResolvedValue(user);
+      repo.findOneByOrFail.mockResolvedValue(entity);
 
       await service.updateUser({} as AuthUser, 0, {} as UpdateUserRequest);
-      return expect(userRepo.manager.update).toHaveBeenCalledTimes(1);
+      return expect(repo.manager.transaction).toHaveBeenCalledTimes(1);
     });
 
-    it("should update user password in cognito", async () => {
-      const user = RandomMockUser();
+    it("should update entity in database", async () => {
+      const entity = RandomMockUser();
 
-      userRepo.findOneByOrFail.mockResolvedValue(user);
+      repo.findOneByOrFail.mockResolvedValue(entity);
+
+      await service.updateUser({} as AuthUser, 0, {} as UpdateUserRequest);
+      return expect(repo.manager.update).toHaveBeenCalledTimes(1);
+    });
+
+    it("should update password in cognito", async () => {
+      const entity = RandomMockUser();
+
+      repo.findOneByOrFail.mockResolvedValue(entity);
 
       await service.updateUser({} as AuthUser, 0, {
         password: "dummy password",
@@ -258,10 +263,10 @@ describe("UserService", () => {
       return expect(_authService.setPassword).toHaveBeenCalledTimes(1);
     });
 
-    it("should update user email in cognito", async () => {
-      const user = RandomMockUser();
+    it("should update email in cognito", async () => {
+      const entity = RandomMockUser();
 
-      userRepo.findOneByOrFail.mockResolvedValue(user);
+      repo.findOneByOrFail.mockResolvedValue(entity);
 
       await service.updateUser({} as AuthUser, 0, {
         email: "dummy@example.com",
@@ -269,25 +274,25 @@ describe("UserService", () => {
       return expect(_authService.setEmail).toHaveBeenCalledTimes(1);
     });
 
-    it("should correctly map to dto when user is updated", () => {
-      const user = RandomMockUser();
+    it("should correctly map to dto when entity is updated", () => {
+      const entity = RandomMockUser();
       const expected: UserDto = {
-        id: user.id,
-        name: user.name,
+        id: entity.id,
+        name: entity.name,
       };
 
-      userRepo.manager.save.mockResolvedValue(user);
-      userRepo.findOneByOrFail.mockResolvedValue(user);
+      repo.manager.save.mockResolvedValue(entity);
+      repo.findOneByOrFail.mockResolvedValue(entity);
 
       return expect(
         service.updateUser({} as AuthUser, 0, {
-          ...user,
+          ...entity,
         }),
       ).resolves.toStrictEqual(expected);
     });
 
     it("should throw NotFoundException when entity not found", () => {
-      userRepo.findOneByOrFail.mockRejectedValue(new Error());
+      repo.findOneByOrFail.mockRejectedValue(new Error());
 
       return expect(
         service.updateUser({} as AuthUser, 0, {} as UpdateUserRequest),
@@ -295,7 +300,7 @@ describe("UserService", () => {
     });
 
     it.skip("should rethrow exception when entity validation fails", () => {
-      userRepo.manager.update.mockRejectedValue(new ValidationError());
+      repo.manager.update.mockRejectedValue(new ValidationError());
 
       return expect(
         service.updateUser({} as AuthUser, 0, {} as UpdateUserRequest),
@@ -305,7 +310,7 @@ describe("UserService", () => {
     it("should throw ConflictException for contstraint violations", () => {
       const err = new QueryFailedError("", [], new Error());
       err.message = "violates unique constraint";
-      userRepo.manager.update.mockRejectedValue(err);
+      repo.manager.update.mockRejectedValue(err);
 
       return expect(
         service.updateUser({} as AuthUser, 0, {} as UpdateUserRequest),
@@ -313,7 +318,7 @@ describe("UserService", () => {
     });
 
     it("should rethrow when unhandled exception occurs", () => {
-      userRepo.manager.update.mockRejectedValue(new DummyError());
+      repo.manager.update.mockRejectedValue(new DummyError());
 
       return expect(
         service.updateUser({} as AuthUser, 0, {} as UpdateUserRequest),
@@ -323,34 +328,34 @@ describe("UserService", () => {
 
   describe("deleteUser", () => {
     it("should use a transaction", async () => {
-      const user = RandomMockUser();
+      const entity = RandomMockUser();
 
-      userRepo.manager.findOneByOrFail.mockResolvedValue(user);
+      repo.manager.findOneByOrFail.mockResolvedValue(entity);
 
       await service.deleteUser({} as AuthUser, 0);
-      return expect(userRepo.manager.transaction).toHaveBeenCalledTimes(1);
+      return expect(repo.manager.transaction).toHaveBeenCalledTimes(1);
     });
 
     it("should remove user from cognito", async () => {
-      const user = RandomMockUser();
+      const entity = RandomMockUser();
 
-      userRepo.manager.findOneByOrFail.mockResolvedValue(user);
+      repo.manager.findOneByOrFail.mockResolvedValue(entity);
 
       await service.deleteUser({} as AuthUser, 0);
       return expect(_authService.deleteUser).toHaveBeenCalledTimes(1);
     });
 
-    it("should remove user from database", async () => {
-      const user = RandomMockUser();
+    it("should remove entity from database", async () => {
+      const entity = RandomMockUser();
 
-      userRepo.manager.findOneByOrFail.mockResolvedValue(user);
+      repo.manager.findOneByOrFail.mockResolvedValue(entity);
 
       await service.deleteUser({} as AuthUser, 0);
-      return expect(userRepo.manager.softRemove).toHaveBeenCalledTimes(1);
+      return expect(repo.manager.softRemove).toHaveBeenCalledTimes(1);
     });
 
     it("should throw NotFoundException when entity not found", () => {
-      userRepo.manager.findOneByOrFail.mockRejectedValue(
+      repo.manager.findOneByOrFail.mockRejectedValue(
         new EntityNotFoundError(null, null),
       );
 
@@ -360,10 +365,10 @@ describe("UserService", () => {
     });
 
     it("should rethrow when unhandled exception occurs", () => {
-      const user = RandomMockUser();
+      const entity = RandomMockUser();
 
-      userRepo.manager.findOneByOrFail.mockResolvedValue(user);
-      userRepo.manager.softRemove.mockRejectedValue(new DummyError());
+      repo.manager.findOneByOrFail.mockResolvedValue(entity);
+      repo.manager.softRemove.mockRejectedValue(new DummyError());
 
       return expect(service.deleteUser({} as AuthUser, 0)).rejects.toThrow(
         DummyError,

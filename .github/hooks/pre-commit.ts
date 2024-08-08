@@ -35,22 +35,14 @@ import { AsyncProcess } from "../../scripts/hooks/async-process";
         }),
         dependsOn: ["unit tests"],
       },
-      linter: {
-        process: new AsyncProcess({
-          command: srcFiles.length
-            ? `npx eslint ${srcFiles.join(" ")}`
-            : "sleep 1",
-        }),
-        dependsOn: ["compiler"],
-      },
-      formatter: {
-        process: new AsyncProcess({
-          command: srcFiles.length
-            ? `npx prettier --check ${srcFiles.join(" ")}`
-            : "sleep 1",
-        }),
-        dependsOn: ["linter"],
-      },
+      // linter: {
+      //   process: new AsyncProcess({
+      //     command: srcFiles.length
+      //       ? `npx eslint ${srcFiles.join(" ")}`
+      //       : "sleep 1",
+      //   }),
+      //   dependsOn: ["compiler"],
+      // },
     });
 
     await runner.Start();

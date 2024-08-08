@@ -5,7 +5,7 @@ export class InMemoryWritableStream extends Writable {
   private offset: number = 0;
   private readonly buffer: Buffer;
 
-  constructor(private readonly size: number = 4096) {
+  constructor(private readonly size: number = 8192) {
     super();
     this.buffer = Buffer.alloc(this.size);
   }

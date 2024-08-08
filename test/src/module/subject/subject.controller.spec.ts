@@ -1,5 +1,5 @@
 import { TestBed } from "@automock/jest";
-import { createMongoAbility, ForbiddenError } from "@casl/ability";
+import { createMongoAbility } from "@casl/ability";
 import { AppAbility } from "@mod/auth/util/ability";
 import { AuthAction } from "@mod/auth/util/auth-actions";
 import { AuthSubject } from "@mod/auth/util/auth-subjects";
@@ -13,13 +13,13 @@ import { AppRequest } from "@util/app-request";
 
 describe("SubjectController", () => {
   let controller: SubjectController;
-  let _service: SubjectService;
+  let service: SubjectService;
 
   beforeEach(async () => {
     const { unit, unitRef } = TestBed.create(SubjectController).compile();
 
     controller = unit;
-    _service = unitRef.get(SubjectService);
+    service = unitRef.get(SubjectService);
   });
 
   it("should be defined", () => {
@@ -27,6 +27,10 @@ describe("SubjectController", () => {
   });
 
   describe("createSubject", () => {
+    const ability = createMongoAbility<AppAbility>([
+      { action: AuthAction.CREATE, subject: AuthSubject.SUBJECT },
+    ]);
+
     it("should throw ForbiddenError when auth fails", () => {
       const ability = createMongoAbility();
       return expect(() =>
@@ -38,19 +42,32 @@ describe("SubjectController", () => {
     });
 
     it("should perform basic auth check", async () => {
-      const errorSpy = jest.spyOn(ForbiddenError, "from");
-      const ability = createMongoAbility<AppAbility>([
-        { action: AuthAction.CREATE, subject: AuthSubject.SUBJECT },
-      ]);
+      const abilitySpy = jest.spyOn(ability, "relevantRuleFor");
       await controller.createSubject(
         { user: { ability } } as unknown as AppRequest,
         {} as CreateSubjectRequest,
       );
-      return expect(errorSpy).toHaveBeenCalled();
+      return expect(abilitySpy).toHaveBeenCalledWith(
+        AuthAction.CREATE,
+        AuthSubject.SUBJECT,
+        undefined,
+      );
+    });
+
+    it("calls subject service", async () => {
+      await controller.createSubject(
+        { user: { ability: ability } } as unknown as AppRequest,
+        {} as CreateSubjectRequest,
+      );
+      expect(service.createSubject).toHaveBeenCalledTimes(1);
     });
   });
 
   describe("readSubject", () => {
+    const ability = createMongoAbility<AppAbility>([
+      { action: AuthAction.READ, subject: AuthSubject.SUBJECT },
+    ]);
+
     it("should throw ForbiddenError when auth fails", () => {
       const ability = createMongoAbility();
       return expect(() =>
@@ -62,19 +79,32 @@ describe("SubjectController", () => {
     });
 
     it("should perform basic auth check", async () => {
-      const errorSpy = jest.spyOn(ForbiddenError, "from");
-      const ability = createMongoAbility<AppAbility>([
-        { action: AuthAction.READ, subject: AuthSubject.SUBJECT },
-      ]);
+      const abilitySpy = jest.spyOn(ability, "relevantRuleFor");
       await controller.readSubject(
         { user: { ability } } as unknown as AppRequest,
         0,
       );
-      return expect(errorSpy).toHaveBeenCalled();
+      return expect(abilitySpy).toHaveBeenCalledWith(
+        AuthAction.READ,
+        AuthSubject.SUBJECT,
+        undefined,
+      );
+    });
+
+    it("calls subject service", async () => {
+      await controller.readSubject(
+        { user: { ability: ability } } as unknown as AppRequest,
+        0,
+      );
+      expect(service.getSubjectById).toHaveBeenCalledTimes(1);
     });
   });
 
   describe("updateSubject", () => {
+    const ability = createMongoAbility<AppAbility>([
+      { action: AuthAction.UPDATE, subject: AuthSubject.SUBJECT },
+    ]);
+
     it("should throw ForbiddenError when auth fails", () => {
       const ability = createMongoAbility();
       return expect(() =>
@@ -87,20 +117,34 @@ describe("SubjectController", () => {
     });
 
     it("should perform basic auth check", async () => {
-      const errorSpy = jest.spyOn(ForbiddenError, "from");
-      const ability = createMongoAbility<AppAbility>([
-        { action: AuthAction.UPDATE, subject: AuthSubject.SUBJECT },
-      ]);
+      const abilitySpy = jest.spyOn(ability, "relevantRuleFor");
       await controller.updateSubject(
         { user: { ability } } as unknown as AppRequest,
         0,
         {} as UpdateSubjectRequest,
       );
-      return expect(errorSpy).toHaveBeenCalled();
+      return expect(abilitySpy).toHaveBeenCalledWith(
+        AuthAction.UPDATE,
+        AuthSubject.SUBJECT,
+        undefined,
+      );
+    });
+
+    it("calls subject service", async () => {
+      await controller.updateSubject(
+        { user: { ability: ability } } as unknown as AppRequest,
+        0,
+        {} as UpdateSubjectRequest,
+      );
+      expect(service.updateSubject).toHaveBeenCalledTimes(1);
     });
   });
 
   describe("deleteSubject", () => {
+    const ability = createMongoAbility<AppAbility>([
+      { action: AuthAction.DELETE_SOFT, subject: AuthSubject.SUBJECT },
+    ]);
+
     it("should throw ForbiddenError when auth fails", () => {
       const ability = createMongoAbility();
       return expect(() =>
@@ -108,23 +152,36 @@ describe("SubjectController", () => {
           { user: { ability } } as unknown as AppRequest,
           0,
         ),
-      ).toThrow(`Cannot execute "DELETE" on "SUBJECT"`);
+      ).toThrow(`Cannot execute "DELETE_SOFT" on "SUBJECT"`);
     });
 
     it("should perform basic auth check", async () => {
-      const errorSpy = jest.spyOn(ForbiddenError, "from");
-      const ability = createMongoAbility<AppAbility>([
-        { action: AuthAction.DELETE, subject: AuthSubject.SUBJECT },
-      ]);
+      const abilitySpy = jest.spyOn(ability, "relevantRuleFor");
       await controller.deleteSubject(
         { user: { ability } } as unknown as AppRequest,
         0,
       );
-      return expect(errorSpy).toHaveBeenCalled();
+      return expect(abilitySpy).toHaveBeenCalledWith(
+        AuthAction.DELETE_SOFT,
+        AuthSubject.SUBJECT,
+        undefined,
+      );
+    });
+
+    it("calls subject service", async () => {
+      await controller.deleteSubject(
+        { user: { ability: ability } } as unknown as AppRequest,
+        0,
+      );
+      expect(service.deleteSubject).toHaveBeenCalledTimes(1);
     });
   });
 
   describe("listSubjects", () => {
+    const ability = createMongoAbility<AppAbility>([
+      { action: AuthAction.LIST, subject: AuthSubject.SUBJECT },
+    ]);
+
     it("should throw ForbiddenError when auth fails", () => {
       const ability = createMongoAbility();
       return expect(() =>
@@ -136,15 +193,24 @@ describe("SubjectController", () => {
     });
 
     it("should perform basic auth check", async () => {
-      const errorSpy = jest.spyOn(ForbiddenError, "from");
-      const ability = createMongoAbility<AppAbility>([
-        { action: AuthAction.LIST, subject: AuthSubject.SUBJECT },
-      ]);
+      const abilitySpy = jest.spyOn(ability, "relevantRuleFor");
       await controller.listSubjects(
         { user: { ability } } as unknown as AppRequest,
         {},
       );
-      return expect(errorSpy).toHaveBeenCalled();
+      return expect(abilitySpy).toHaveBeenCalledWith(
+        AuthAction.LIST,
+        AuthSubject.SUBJECT,
+        undefined,
+      );
+    });
+
+    it("calls subject service", async () => {
+      await controller.listSubjects(
+        { user: { ability: ability } } as unknown as AppRequest,
+        {},
+      );
+      expect(service.getFilteredSubjectList).toHaveBeenCalledTimes(1);
     });
   });
 });
